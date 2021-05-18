@@ -1,10 +1,13 @@
 import React from "react";
-import SignInScreen from "./screens/signIn.screen";
+import { BrowserRouter } from "react-router-dom";
+import AppNavigator from "./app.navigator";
 
 function App() {
   return (
     <div className="App">
-      <SignInScreen />
+      <BrowserRouter>
+        <AppNavigator />
+      </BrowserRouter>
     </div>
   );
 }
