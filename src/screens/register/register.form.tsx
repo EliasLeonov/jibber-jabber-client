@@ -8,16 +8,14 @@ import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import React from "react";
+import React, { useContext } from "react";
+import { RegisterContext } from "./register.screen";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Jibber-Jabber
-      </Link>{" "}
-      {new Date().getFullYear()}
+      Jibber-Jabber {new Date().getFullYear()}
       {"."}
     </Typography>
   );
@@ -43,8 +41,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Register = () => {
+const RegisterForm = () => {
   const classes = useStyles();
+
+  const { setLoading } = useContext(RegisterContext);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -119,6 +119,7 @@ const Register = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={() => setLoading(true)}
           >
             Register
           </Button>
@@ -138,12 +139,4 @@ const Register = () => {
   );
 };
 
-const RegisterScreen = (props) => {
-  return (
-    <div>
-      <Register />
-    </div>
-  );
-};
-
-export default RegisterScreen;
+export default RegisterForm;

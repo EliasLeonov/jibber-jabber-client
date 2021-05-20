@@ -1,8 +1,8 @@
 import React from "react";
 import { Switch } from "react-router";
 import { Redirect, Route } from "react-router-dom";
-import RegisterScreen from "./screens/register.screen";
-import SignInScreen from "./screens/signIn.screen";
+import RegisterScreen from "./screens/register/register.screen";
+import SignInScreen from "./screens/signin/signIn.screen";
 
 const AppNavigator = () => {
   return (

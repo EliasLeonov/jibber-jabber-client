@@ -1,4 +1,3 @@
-import { CircularProgress } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
@@ -11,16 +10,14 @@ import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import React, { createContext, useContext, useState } from "react";
+import React, { useContext } from "react";
+import { SignInContext } from "./signIn.screen";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Jibber-Jabber
-      </Link>{" "}
-      {new Date().getFullYear()}
+      Jibber-Jabber {new Date().getFullYear()}
       {"."}
     </Typography>
   );
@@ -45,11 +42,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
-
-const SignInContext = createContext({
-  loading: false,
-  setLoading: (val) => {},
-});
 
 const SignInForm = () => {
   const classes = useStyles();
@@ -121,16 +113,4 @@ const SignInForm = () => {
   );
 };
 
-const SignInScreen = () => {
-  const [loading, setLoading] = useState(false);
-
-  return (
-    <div>
-      <SignInContext.Provider value={{ loading, setLoading }}>
-        {!loading ? <SignInForm /> : <CircularProgress />}
-      </SignInContext.Provider>
-    </div>
-  );
-};
-
-export default SignInScreen;
+export default SignInForm;
