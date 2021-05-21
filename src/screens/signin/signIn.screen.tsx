@@ -7,6 +7,8 @@ export const SignInContext = createContext({
   setLoading: (val) => {},
 });
 
+const trySignIn = (username: string, password: string) => {};
+
 const SignInScreen = () => {
   const [loading, setLoading] = useState(false);
 
