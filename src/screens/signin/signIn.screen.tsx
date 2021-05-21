@@ -1,24 +1,14 @@
-import React, { createContext, useState } from "react";
+import React from "react";
+import { useSignInSelector } from "../../storage/app.selectors";
 import LoadingScreen from "../loading.screen";
 import SignInForm from "./signin.form";
-
-export const SignInContext = createContext({
-  loading: false,
-  setLoading: (val) => {},
-});
 
 const trySignIn = (username: string, password: string) => {};
 
 const SignInScreen = () => {
-  const [loading, setLoading] = useState(false);
+  const loading = useSignInSelector((state) => state.loading);
 
-  return (
-    <div>
-      <SignInContext.Provider value={{ loading, setLoading }}>
-        {loading ? <LoadingScreen /> : <SignInForm />}
-      </SignInContext.Provider>
-    </div>
-  );
+  return <div>{loading ? <LoadingScreen /> : <SignInForm />}</div>;
 };
 
 export default SignInScreen;

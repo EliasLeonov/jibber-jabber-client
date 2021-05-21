@@ -1,22 +1,12 @@
-import React, { createContext, useState } from "react";
+import React from "react";
+import { useRegisterSelector } from "../../storage/app.selectors";
 import LoadingScreen from "../loading.screen";
 import RegisterForm from "./register.form";
 
-export const RegisterContext = createContext({
-  loading: false,
-  setLoading: (val) => {},
-});
-
 const RegisterScreen = () => {
-  const [loading, setLoading] = useState(false);
+  const loading = useRegisterSelector((state) => state.loading);
 
-  return (
-    <div>
-      <RegisterContext.Provider value={{ loading, setLoading }}>
-        {loading ? <LoadingScreen /> : <RegisterForm />}
-      </RegisterContext.Provider>
-    </div>
-  );
+  return <div>{loading ? <LoadingScreen /> : <RegisterForm />}</div>;
 };
 
 export default RegisterScreen;

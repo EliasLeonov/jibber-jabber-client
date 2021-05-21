@@ -8,8 +8,9 @@ import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import React, { useContext } from "react";
-import { RegisterContext } from "./register.screen";
+import React from "react";
+import { useAppDispatch } from "../../storage/app.selectors";
+import { startLoading } from "../../storage/register.reducer";
 
 function Copyright() {
   return (
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 const RegisterForm = () => {
   const classes = useStyles();
 
-  const { setLoading } = useContext(RegisterContext);
+  const dispatch = useAppDispatch();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -119,7 +120,7 @@ const RegisterForm = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={() => setLoading(true)}
+            onClick={() => dispatch(startLoading())}
           >
             Register
           </Button>
