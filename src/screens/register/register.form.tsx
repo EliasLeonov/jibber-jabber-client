@@ -8,9 +8,9 @@ import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import React from "react";
+import React, { useState } from "react";
 import { useAppDispatch } from "../../storage/app.selectors";
-import { startLoading } from "../../storage/register.reducer";
+import { registerUser } from "../../storage/register.reducer";
 
 function Copyright() {
   return (
@@ -43,6 +43,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RegisterForm = () => {
+  const [name, setName] = useState("");
+  const [lastname, setLastName] = useState("");
+  const [mail, setMail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const classes = useStyles();
 
   const dispatch = useAppDispatch();
@@ -67,6 +72,7 @@ const RegisterForm = () => {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                onChange={(e) => setName(e.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -78,6 +84,7 @@ const RegisterForm = () => {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                onChange={(e) => setLastName(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -89,6 +96,7 @@ const RegisterForm = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange={(e) => setMail(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -99,6 +107,7 @@ const RegisterForm = () => {
                 id="username"
                 label="Username"
                 name="username"
+                onChange={(e) => setUsername(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -111,6 +120,7 @@ const RegisterForm = () => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={(e) => setPassword(e.target.value)}
               />
             </Grid>
           </Grid>
@@ -120,7 +130,11 @@ const RegisterForm = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={() => dispatch(startLoading())}
+            onClick={async () =>
+              await dispatch(
+                registerUser({ username, password, mail, name, lastname })
+              )
+            }
           >
             Register
           </Button>
