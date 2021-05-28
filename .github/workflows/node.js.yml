@@ -1,14 +1,20 @@
-name: Build
-on: [push]
+name: Node.js CI
+on:
+  push:
+    branches: [main, production]
+  pull_request:
+    branches: [main, dev, production]
+
 jobs:
   build:
-    name: Build
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - uses: borales/actions-yarn@v2.0.0
+      - name: Checkout branch
+        uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v1
         with:
-          cmd: install
-      - uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: build
+          node-version: 14
+      - name: Build
+        run: npm ci
