@@ -10,9 +10,10 @@ import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import React from "react";
+import React, { useState } from "react";
 import { useAppDispatch } from "../../storage/app.selectors";
-import { startLoading } from "../../storage/signin.reducer";
+import { storeToken } from "../../storage/core.reducer";
+import { signInUser } from "../../storage/signin.reducer";
 
 function Copyright() {
   return (
@@ -46,6 +47,8 @@ const useStyles = makeStyles((theme) => ({
 
 const SignInForm = () => {
   const classes = useStyles();
+  const [mail, setMail] = useState("");
+  const [password, setPassword] = useState("");
 
   const dispatch = useAppDispatch();
 
@@ -68,6 +71,7 @@ const SignInForm = () => {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange={(e) => setMail(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -79,6 +83,7 @@ const SignInForm = () => {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={(e) => setPassword(e.target.value)}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -90,7 +95,11 @@ const SignInForm = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={() => dispatch(startLoading())}
+            onClick={async () =>
+              await dispatch(signInUser({ mail, password })).then((response) =>
+                dispatch(storeToken(response.payload))
+              )
+            }
           >
             Sign In
           </Button>
