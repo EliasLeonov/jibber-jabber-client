@@ -1,15 +1,28 @@
+import { makeStyles } from "@material-ui/styles";
 import { Switch } from "react-router";
 import { Redirect, Route } from "react-router-dom";
-import ResponsiveDrawer from "../screens/post/post.screen";
+import CustomDrawer from "../screens/drawer/home.drawer";
+import PostScreen from "../screens/post/post.screen";
+import ProfileScreen from "../screens/profile/profile.screen";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flex: 1,
+  },
+}));
 
 const HomeNavigator = () => {
   return (
-    <Switch>
-      <Route path="/post" component={ResponsiveDrawer} />
-      <Route>
-        <Redirect to="/post" />
-      </Route>
-    </Switch>
+    <div>
+      <CustomDrawer />
+      <Switch>
+        <Route path="/feed" component={PostScreen} />
+        <Route path="/profile" component={ProfileScreen} />
+        <Route>
+          <Redirect to="/feed" />
+        </Route>
+      </Switch>
+    </div>
   );
 };
 
