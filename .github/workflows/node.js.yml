@@ -13,3 +13,4 @@ jobs:
           node-version: 14
       - name: Build
         run: npm ci
+        run: npm run-script build
