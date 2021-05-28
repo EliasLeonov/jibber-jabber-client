@@ -1,7 +1,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import AppNavigator from "./app.navigator";
+import AppNavigator from "./navigation/app.navigator";
 import store from "./storage/app.store";
 
 function App() {

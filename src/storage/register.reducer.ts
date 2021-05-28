@@ -4,8 +4,10 @@ import { register } from "../screens/register/register.requests";
 export const registerUser: AsyncThunk<any, any, any> = createAsyncThunk(
   "register/registerUser",
   async (payload: any) => {
-    const response = await register(payload);
-    return response.data;
+    const response = await register(payload)
+      .then((res) => res.data)
+      .catch((error) => console.error(error));
+    return response;
   }
 );
 
@@ -13,20 +15,21 @@ export const RegisterSlice = createSlice({
   name: "register",
   initialState: {
     loading: false,
-    response: {},
+    succes: false,
+    error: false,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(registerUser.fulfilled, (state, action) => {
       state.loading = false;
-      state.response = action.payload;
+      state.succes = true;
     });
     builder.addCase(registerUser.pending, (state, action) => {
       state.loading = true;
     });
     builder.addCase(registerUser.rejected, (state, action) => {
       state.loading = false;
-      state.response = action.payload;
+      state.error = true;
     });
   },
 });
