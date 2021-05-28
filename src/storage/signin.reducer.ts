@@ -5,7 +5,7 @@ export const signInUser: AsyncThunk<any, any, any> = createAsyncThunk(
   "signIn/signInUser",
   async (payload: any) => {
     const response = await signIn(payload.mail, payload.password)
-      .then((res) => res.data.token)
+      .then((res) => res.data)
       .catch((error) => console.error(error));
     return response;
   }
@@ -15,22 +15,26 @@ export const SignInSlice = createSlice({
   name: "signIn",
   initialState: {
     loading: false,
-    token: "",
+    response: {},
     error: false,
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(signInUser.fulfilled, (state, action) => {
-      state.loading = false;
-      state.token = action.payload;
-    });
-    builder.addCase(signInUser.pending, (state, action) => {
-      state.loading = true;
-    });
-    builder.addCase(signInUser.rejected, (state, action) => {
-      state.loading = false;
-      state.error = true;
-    });
+    builder
+      .addCase(signInUser.fulfilled, (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          response: action.payload,
+        };
+      })
+      .addCase(signInUser.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(signInUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = true;
+      });
   },
 });
 

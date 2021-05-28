@@ -11,7 +11,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import React, { useState } from "react";
-import { useAppDispatch, useSignInSelector } from "../../storage/app.selectors";
+import { useAppDispatch } from "../../storage/app.selectors";
+import { storeToken } from "../../storage/core.reducer";
 import { signInUser } from "../../storage/signin.reducer";
 
 function Copyright() {
@@ -48,9 +49,6 @@ const SignInForm = () => {
   const classes = useStyles();
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
-
-  const { token } = useSignInSelector((state) => state);
-  console.log(token);
 
   const dispatch = useAppDispatch();
 
@@ -97,7 +95,11 @@ const SignInForm = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={async () => await dispatch(signInUser({ mail, password }))}
+            onClick={async () =>
+              await dispatch(signInUser({ mail, password })).then((response) =>
+                dispatch(storeToken(response.payload))
+              )
+            }
           >
             Sign In
           </Button>
