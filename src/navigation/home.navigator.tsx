@@ -1,28 +1,35 @@
+import { Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
+import React from "react";
 import { Switch } from "react-router";
 import { Redirect, Route } from "react-router-dom";
 import CustomDrawer from "../screens/drawer/home.drawer";
-import PostScreen from "../screens/post/post.screen";
+import FeedScreen from "../screens/feed/feed.screen";
 import ProfileScreen from "../screens/profile/profile.screen";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    flex: 1,
+    display: "flex",
+    flexDirection: "row",
   },
 }));
 
 const HomeNavigator = () => {
+  const styles = useStyles();
+
   return (
-    <div>
+    <Container className={styles.root}>
       <CustomDrawer />
-      <Switch>
-        <Route path="/feed" component={PostScreen} />
-        <Route path="/profile" component={ProfileScreen} />
-        <Route>
-          <Redirect to="/feed" />
-        </Route>
-      </Switch>
-    </div>
+      <Container>
+        <Switch>
+          <Route path="/feed" component={FeedScreen} />
+          <Route path="/profile" component={ProfileScreen} />
+          <Route>
+            <Redirect to="/feed" />
+          </Route>
+        </Switch>
+      </Container>
+    </Container>
   );
 };
 

@@ -1,15 +1,32 @@
-import { Divider, List, ListItem, ListItemText } from "@material-ui/core";
+import {
+  Container,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  makeStyles,
+} from "@material-ui/core";
 import React from "react";
 import { useAppDispatch } from "../../storage/app.selectors";
 import { clearToken } from "../../storage/core.reducer";
 import FeedListItem from "./feed.list.item";
 import ProfileListItem from "./profile.list.item";
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    width: "10%",
+  },
+}));
+
 const CustomDrawer = () => {
+  const styles = useStyles();
   const dispatch = useAppDispatch();
 
   return (
-    <div>
+    <Container className={styles.root}>
       <Divider />
       <List>
         <FeedListItem />
@@ -19,7 +36,7 @@ const CustomDrawer = () => {
           <ListItemText primary={"Logout"} />
         </ListItem>
       </List>
-    </div>
+    </Container>
   );
 };
 

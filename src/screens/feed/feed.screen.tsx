@@ -1,7 +1,7 @@
 import React from "react";
 import Post from "./post.component";
 
-const PostScreen = () => {
+const FeedScreen = () => {
   const array = [
     { username: "user 1", text: "text 1" },
     { username: "user 2", text: "text 2" },
@@ -29,4 +29,4 @@ const PostScreen = () => {
   );
 };
 
-export default PostScreen;
+export default FeedScreen;
