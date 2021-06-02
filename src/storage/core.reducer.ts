@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 
 export const CoreSlice = createSlice({
   name: "app",
@@ -8,9 +9,11 @@ export const CoreSlice = createSlice({
   reducers: {
     storeToken: (state, action) => {
       state.token = action.payload.token;
+      axios.defaults.headers.common["Authorization"] = "Bearer " + state.token;
     },
     clearToken: (state) => {
       state.token = "";
+      axios.defaults.headers.common["Authorization"] = "";
     },
   },
 });
