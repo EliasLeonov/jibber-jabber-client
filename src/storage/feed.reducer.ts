@@ -1,4 +1,6 @@
 import { AsyncThunk, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import Post from "../models/post";
+import { createNewPost } from "../screens/feed/post.requests";
 
 export const fetchFeed: AsyncThunk<any, any, any> = createAsyncThunk(
   "feed/fetch",
@@ -7,29 +9,57 @@ export const fetchFeed: AsyncThunk<any, any, any> = createAsyncThunk(
   }
 );
 
+export const createPost: AsyncThunk<any, any, any> = createAsyncThunk(
+  "feed/createPost",
+  async (payload: any) => {
+    const post: Post = await createNewPost(payload.username, payload.text)
+      .then((res) => res.data)
+      .catch((error) => console.error(error));
+    return post;
+  }
+);
+
 export const FeedSlice = createSlice({
   name: "feed",
   initialState: {
-    loading: false,
-    succes: false,
-    error: false,
+    loadingFeed: false,
+    loadingFeedSucces: false,
+    loadingFeedError: false,
+    loadingPostCreation: false,
+    loadingPostCreationSucces: false,
+    loadingPostCreationError: false,
     feed: [],
   },
   reducers: {
     favoritePost: (state, action) => {},
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchFeed.fulfilled, (state, action) => {
-      state.loading = false;
-      state.succes = true;
-    });
-    builder.addCase(fetchFeed.pending, (state, action) => {
-      state.loading = true;
-    });
-    builder.addCase(fetchFeed.rejected, (state, action) => {
-      state.loading = false;
-      state.error = true;
-    });
+    builder
+      .addCase(fetchFeed.fulfilled, (state, action) => {
+        state.loadingFeed = false;
+        state.loadingFeedSucces = true;
+      })
+      .addCase(fetchFeed.pending, (state, action) => {
+        state.loadingFeed = true;
+      })
+      .addCase(fetchFeed.rejected, (state, action) => {
+        state.loadingFeed = false;
+        state.loadingFeedError = true;
+      });
+
+    builder
+      .addCase(createPost.fulfilled, (state, action) => {
+        state.loadingPostCreationSucces = true;
+        state.loadingPostCreation = false;
+        state.feed.push(action.payload.post);
+      })
+      .addCase(createPost.pending, (state, action) => {
+        state.loadingPostCreation = true;
+      })
+      .addCase(createPost.rejected, (state, action) => {
+        state.loadingPostCreation = false;
+        state.loadingPostCreationError = true;
+      });
   },
 });
 

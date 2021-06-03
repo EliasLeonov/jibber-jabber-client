@@ -15,7 +15,7 @@ export const SignInSlice = createSlice({
   name: "signIn",
   initialState: {
     loading: false,
-    response: {},
+    token: "",
     error: false,
   },
   reducers: {},
@@ -25,7 +25,7 @@ export const SignInSlice = createSlice({
         return {
           ...state,
           loading: false,
-          response: action.payload,
+          token: action.payload.token,
         };
       })
       .addCase(signInUser.pending, (state, action) => {

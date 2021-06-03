@@ -1,8 +1,10 @@
+import { Container } from "@material-ui/core";
+
 const ProfileScreen = () => {
   return (
-    <div>
+    <Container>
       <text>hola</text>
-    </div>
+    </Container>
   );
 };
 

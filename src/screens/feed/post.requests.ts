@@ -1,6 +1,6 @@
 const axios = require("axios").default;
 
-export const createPost = ({ username, text }) =>
+export const createNewPost = (username: string, text: string) =>
   axios({
     method: "post",
     url: "http://localhost:9001/post/save",

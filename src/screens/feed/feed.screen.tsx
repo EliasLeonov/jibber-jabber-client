@@ -1,5 +1,7 @@
 import { Button, Container, makeStyles, TextField } from "@material-ui/core";
 import React, { useState } from "react";
+import { useAppDispatch, useFeedSelector } from "../../storage/app.selectors";
+import { createPost } from "../../storage/feed.reducer";
 import Post from "./post.component";
 
 const array = [
@@ -24,6 +26,9 @@ const useStyles = makeStyles((theme) => ({
 const FeedScreen = () => {
   const styles = useStyles();
   const [value, setValue] = useState("");
+  const feed = useFeedSelector((state) => state.feed);
+
+  const dispatch = useAppDispatch();
 
   return (
     <Container>
@@ -32,6 +37,11 @@ const FeedScreen = () => {
           variant="outlined"
           color="primary"
           className={styles.postButton}
+          onClick={async () =>
+            await dispatch(
+              createPost({ username: "bauti", text: "my first jab" })
+            )
+          }
         >
           Post
         </Button>
@@ -46,7 +56,7 @@ const FeedScreen = () => {
         />
       </Container>
       <Container>
-        {array.map((x) => (
+        {feed.map((x) => (
           <Post username={x.username} text={x.text} />
         ))}
       </Container>
