@@ -5,6 +5,7 @@ import { Switch } from "react-router";
 import { Redirect, Route } from "react-router-dom";
 import CustomDrawer from "../screens/drawer/home.drawer";
 import FeedScreen from "../screens/feed/feed.screen";
+import MessagesScreen from "../screens/messages/messages.screen";
 import ProfileScreen from "../screens/profile/profile.screen";
 
 const useStyles = makeStyles((theme) => ({
@@ -24,6 +25,7 @@ const HomeNavigator = () => {
         <Switch>
           <Route path="/feed" component={FeedScreen} />
           <Route path="/profile" component={ProfileScreen} />
+          <Route path="/messages" component={MessagesScreen} />
           <Route>
             <Redirect to="/feed" />
           </Route>
