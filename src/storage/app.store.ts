@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { CoreSlice } from "./core.reducer";
+import { FeedSlice } from "./feed.reducer";
 import { RegisterSlice } from "./register.reducer";
 import { SignInSlice } from "./signin.reducer";
 
@@ -8,6 +9,7 @@ const store = configureStore({
     signIn: SignInSlice.reducer,
     register: RegisterSlice.reducer,
     core: CoreSlice.reducer,
+    feed: FeedSlice.reducer,
   },
 });
 

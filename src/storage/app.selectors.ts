@@ -1,6 +1,7 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { AppDispatch, AppState } from "./app.store";
 import { CoreState } from "./core.reducer";
+import { FeedState } from "./feed.reducer";
 import { RegisterState } from "./register.reducer";
 import { SignInState } from "./signin.reducer";
 
@@ -17,3 +18,6 @@ export const useSignInSelector: TypedUseSelectorHook<SignInState> = (
 export const useRegisterSelector: TypedUseSelectorHook<RegisterState> = (
   selector
 ) => useAppSelector((state) => selector(state.register));
+
+export const useFeedSelector: TypedUseSelectorHook<FeedState> = (selector) =>
+  useAppSelector((state) => selector(state.feed));
