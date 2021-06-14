@@ -17,8 +17,13 @@ const registerConfig = {
   storage: storage,
 };
 
+const signInConfig = {
+  key: "signIn",
+  storage: storage,
+};
+
 const rootReducer = combineReducers({
-  signIn: SignInSlice.reducer,
+  signIn: persistReducer(signInConfig, SignInSlice.reducer),
   register: persistReducer(registerConfig, RegisterSlice.reducer),
   core: CoreSlice.reducer,
   feed: persistReducer(feedConfig, FeedSlice.reducer),
@@ -28,7 +33,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: "app",
   storage,
-  blacklist: ["feed", "register "],
+  blacklist: ["feed", "register", "signIn"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
