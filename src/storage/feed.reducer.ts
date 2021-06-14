@@ -1,15 +1,42 @@
-import { AsyncThunk, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Post from "../models/post";
 import { createNewPost } from "../screens/feed/post.requests";
 
-export const fetchFeed: AsyncThunk<any, any, any> = createAsyncThunk(
-  "feed/fetch",
-  async (payload: any) => {
-    return null;
-  }
-);
+const moment = require("moment");
 
-export const createPost: AsyncThunk<any, any, any> = createAsyncThunk(
+export const fetchPosts = createAsyncThunk("feed/posts", () => {
+  return [
+    {
+      id: "1",
+      author: {
+        id: "123",
+        username: "Pablo",
+      },
+      text: "$BTC to the moon!!!!",
+      timestamp: moment().format("LTS"),
+    },
+    {
+      id: "2",
+      author: {
+        id: "2",
+        username: "Bauti",
+      },
+      text: "insert elon musk meme",
+      timestamp: moment().format("LTS"),
+    },
+    {
+      id: "3",
+      author: {
+        id: "1",
+        username: "Pablo",
+      },
+      text: "yes sir..",
+      timestamp: moment().format("LTS"),
+    },
+  ];
+});
+
+export const createPost = createAsyncThunk(
   "feed/createPost",
   async (payload: any) => {
     const post: Post = await createNewPost(payload.username, payload.text)
@@ -22,36 +49,40 @@ export const createPost: AsyncThunk<any, any, any> = createAsyncThunk(
 export const FeedSlice = createSlice({
   name: "feed",
   initialState: {
-    loadingFeed: false,
-    loadingFeedSucces: false,
-    loadingFeedError: false,
+    fetchPostsRequestStatus: {
+      loading: false,
+      success: false,
+      error: false,
+    },
     loadingPostCreation: false,
     loadingPostCreationSucces: false,
     loadingPostCreationError: false,
-    feed: [],
+    posts: [],
   },
   reducers: {
     favoritePost: (state, action) => {},
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchFeed.fulfilled, (state, action) => {
-        state.loadingFeed = false;
-        state.loadingFeedSucces = true;
+      .addCase(fetchPosts.rejected, (state, action) => {
+        state.fetchPostsRequestStatus.error = true;
+        state.fetchPostsRequestStatus.loading = false;
+        state.fetchPostsRequestStatus.success = false;
       })
-      .addCase(fetchFeed.pending, (state, action) => {
-        state.loadingFeed = true;
-      })
-      .addCase(fetchFeed.rejected, (state, action) => {
-        state.loadingFeed = false;
-        state.loadingFeedError = true;
+      .addCase(fetchPosts.fulfilled, (state, action) => {
+        state.fetchPostsRequestStatus.loading = false;
+        state.fetchPostsRequestStatus.success = true;
+        state.posts = action.payload;
       });
+    //.addCase(fetchPosts.pending, (state, action) => {
+    // state.fetchPostsRequestStatus.loading = true;
+    // })
 
     builder
       .addCase(createPost.fulfilled, (state, action) => {
         state.loadingPostCreationSucces = true;
         state.loadingPostCreation = false;
-        state.feed.push(action.payload.post);
+        state.posts.push(action.payload);
       })
       .addCase(createPost.pending, (state, action) => {
         state.loadingPostCreation = true;

@@ -7,17 +7,33 @@ import { FeedSlice } from "./feed.reducer";
 import { RegisterSlice } from "./register.reducer";
 import { SignInSlice } from "./signin.reducer";
 
+const feedConfig = {
+  key: "feed",
+  storage: storage,
+};
+
+const registerConfig = {
+  key: "register",
+  storage: storage,
+};
+
+const signInConfig = {
+  key: "signIn",
+  storage: storage,
+};
+
 const rootReducer = combineReducers({
-  signIn: SignInSlice.reducer,
-  register: RegisterSlice.reducer,
+  signIn: persistReducer(signInConfig, SignInSlice.reducer),
+  register: persistReducer(registerConfig, RegisterSlice.reducer),
   core: CoreSlice.reducer,
-  feed: FeedSlice.reducer,
+  feed: persistReducer(feedConfig, FeedSlice.reducer),
   conversation: ConversationSlice.reducer,
 });
 
 const persistConfig = {
-  key: "root",
+  key: "app",
   storage,
+  blacklist: ["feed", "register", "signIn"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

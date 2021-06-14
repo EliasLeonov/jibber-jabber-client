@@ -20,7 +20,7 @@ const Post = (props) => {
   return (
     <Container className={styles.root}>
       <Card>
-        <CardHeader title={props.username} subheader={"Date"} />
+        <CardHeader title={props.author.username} subheader={props.timestamp} />
         <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
             {props.text}

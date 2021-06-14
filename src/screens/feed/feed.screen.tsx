@@ -1,17 +1,8 @@
 import { Button, Container, makeStyles, TextField } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useFeedSelector } from "../../storage/app.selectors";
-import { createPost } from "../../storage/feed.reducer";
+import { createPost, fetchPosts } from "../../storage/feed.reducer";
 import Post from "./post.component";
-
-const array = [
-  { username: "user 1", text: "text 1" },
-  { username: "user 2", text: "text 2" },
-  { username: "user 3", text: "text 3" },
-  { username: "user 3", text: "text 3" },
-  { username: "user 3", text: "text 3" },
-  { username: "user 3", text: "text 3" },
-];
 
 const useStyles = makeStyles((theme) => ({
   textContainer: {
@@ -26,9 +17,13 @@ const useStyles = makeStyles((theme) => ({
 const FeedScreen = () => {
   const styles = useStyles();
   const [value, setValue] = useState("");
-  const feed = useFeedSelector((state) => state.feed);
+  const posts = useFeedSelector((state) => state.posts);
 
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchPosts());
+  }, []);
 
   return (
     <Container>
@@ -56,8 +51,8 @@ const FeedScreen = () => {
         />
       </Container>
       <Container>
-        {feed.map((x) => (
-          <Post username={x.username} text={x.text} />
+        {posts.map((x) => (
+          <Post {...x} key={x.id} />
         ))}
       </Container>
     </Container>
