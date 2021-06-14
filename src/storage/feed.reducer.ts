@@ -73,10 +73,10 @@ export const FeedSlice = createSlice({
         state.fetchPostsRequestStatus.loading = false;
         state.fetchPostsRequestStatus.success = true;
         state.posts = action.payload;
+      })
+      .addCase(fetchPosts.pending, (state, action) => {
+        state.fetchPostsRequestStatus.loading = true;
       });
-    //.addCase(fetchPosts.pending, (state, action) => {
-    // state.fetchPostsRequestStatus.loading = true;
-    // })
 
     builder
       .addCase(createPost.fulfilled, (state, action) => {
