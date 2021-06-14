@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { ConversationSlice } from "./conversation.reducer";
 import { CoreSlice } from "./core.reducer";
 import { FeedSlice } from "./feed.reducer";
 import { RegisterSlice } from "./register.reducer";
@@ -10,6 +11,7 @@ const store = configureStore({
     register: RegisterSlice.reducer,
     core: CoreSlice.reducer,
     feed: FeedSlice.reducer,
+    conversation: ConversationSlice.reducer,
   },
 });
 

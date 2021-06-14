@@ -1,24 +1,27 @@
 import { Container } from "@material-ui/core";
+import { useEffect } from "react";
+import {
+  useAppDispatch,
+  useConversationSelector,
+} from "../../storage/app.selectors";
+import { fetchAll } from "../../storage/conversation.reducer";
 import Conversation from "./conversation.card";
 
-const conversations = [
-  {
-    username: "PabloRocks123",
-    firstName: "Pablo",
-    lastMessage: "Yo when are we leaving?",
-  },
-  {
-    username: "BigManlo",
-    firstName: "Biggie",
-    lastMessage: "BTC is going to the moon, you know it, i know it.",
-  },
-];
-
 const MessagesScreen = () => {
+  const dispatch = useAppDispatch();
+  const conversations: any[] = useConversationSelector(
+    (state) => state.conversations
+  );
+
+  useEffect(() => {
+    dispatch(fetchAll());
+  }, []);
+
   return (
     <Container>
       {conversations.map((conv) => (
         <Conversation
+          key={conv.id}
           username={conv.username}
           firstName={conv.firstName}
           lastMessage={conv.lastMessage}
