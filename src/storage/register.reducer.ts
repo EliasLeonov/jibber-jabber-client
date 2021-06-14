@@ -1,7 +1,7 @@
-import { AsyncThunk, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { register } from "../screens/register/register.requests";
 
-export const registerUser: AsyncThunk<any, any, any> = createAsyncThunk(
+export const registerUser = createAsyncThunk(
   "register/registerUser",
   async (payload: any) => {
     const response = await register(payload)
