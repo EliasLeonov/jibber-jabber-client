@@ -52,7 +52,7 @@ const FeedScreen = () => {
       </Container>
       <Container>
         {posts.map((x) => (
-          <Post {...x} timestamp={x.timestamp} />
+          <Post {...x} key={x.id} />
         ))}
       </Container>
     </Container>
