@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import { useAppDispatch } from "../../storage/app.selectors";
-import { clearToken } from "../../storage/core.reducer";
+import { clearProfile } from "../../storage/profile.reducer";
 import FeedListItem from "./feed.list.item";
 import MessagesListItem from "./message.list.item";
 import ProfileListItem from "./profile.list.item";
@@ -34,7 +34,7 @@ const CustomDrawer = () => {
         <MessagesListItem />
         <ProfileListItem />
         <Divider />
-        <ListItem button onClick={() => dispatch(clearToken())}>
+        <ListItem button onClick={() => dispatch(clearProfile())}>
           <ListItemText primary={"Logout"} />
         </ListItem>
       </List>

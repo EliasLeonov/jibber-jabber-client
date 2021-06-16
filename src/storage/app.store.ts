@@ -4,8 +4,8 @@ import storage from "redux-persist/lib/storage";
 import { ConversationSlice } from "./conversation.reducer";
 import { CoreSlice } from "./core.reducer";
 import { FeedSlice } from "./feed.reducer";
+import { ProfileSlice } from "./profile.reducer";
 import { RegisterSlice } from "./register.reducer";
-import { SignInSlice } from "./signin.reducer";
 
 const feedConfig = {
   key: "feed",
@@ -17,17 +17,12 @@ const registerConfig = {
   storage: storage,
 };
 
-const signInConfig = {
-  key: "signIn",
-  storage: storage,
-};
-
 const rootReducer = combineReducers({
-  signIn: persistReducer(signInConfig, SignInSlice.reducer),
   register: persistReducer(registerConfig, RegisterSlice.reducer),
   core: CoreSlice.reducer,
   feed: persistReducer(feedConfig, FeedSlice.reducer),
   conversation: ConversationSlice.reducer,
+  profile: ProfileSlice.reducer,
 });
 
 const persistConfig = {

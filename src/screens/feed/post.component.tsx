@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   root: { marginTop: 25, width: "90%" },
 }));
 
-const Post = (props) => {
+const PostComponent = (props) => {
   const styles = useStyles();
   return (
     <Container className={styles.root}>
@@ -36,4 +36,4 @@ const Post = (props) => {
   );
 };
 
-export default Post;
+export default PostComponent;

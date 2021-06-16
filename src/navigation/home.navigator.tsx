@@ -24,7 +24,7 @@ const HomeNavigator = () => {
       <Container>
         <Switch>
           <Route path="/feed" component={FeedScreen} />
-          <Route path="/profile" component={ProfileScreen} />
+          <Route path="/profile/:id?" component={ProfileScreen} />
           <Route path="/messages" component={MessagesScreen} />
           <Route>
             <Redirect to="/feed" />
