@@ -1,28 +1,33 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { signIn } from "../screens/signin/signin.request";
+import { fetchPrivateProfile } from "../screens/profile/profile.request";
+import { login } from "../screens/signin/signin.request";
 
-export const signInUser = createAsyncThunk(
-  "profile/signIn",
+export const loginUser = createAsyncThunk(
+  "profile/login",
   async (payload: any) => {
-    const response = await signIn(payload.mail, payload.password)
-      .then((res) => {
-        return {
-          id: "123456",
-          username: "Bauti",
-          mail: "b@b.com",
-          firstName: "Bauti",
-          lastName: "Baiocchi",
-        };
-      })
+    const response = await login(payload.username, payload.password)
+      .then((res) => res.data)
       .catch((error) => console.error(error));
     return response;
   }
 );
 
+export const fetchProfile = createAsyncThunk("profile/fetch", async () => {
+  const profile = await fetchPrivateProfile()
+    .then((res) => res.data)
+    .catch((error) => console.error(error));
+  return profile;
+});
+
 export const ProfileSlice = createSlice({
   name: "profile",
   initialState: {
-    signInRequestStatus: {
+    loginRequestStatus: {
+      loading: false,
+      succes: false,
+      error: false,
+    },
+    fetchPofileRequestStatus: {
       loading: false,
       succes: false,
       error: false,
@@ -32,26 +37,50 @@ export const ProfileSlice = createSlice({
   reducers: {
     clearProfile: (state) => {
       state.profile = undefined;
-      state.signInRequestStatus.loading = false;
-      state.signInRequestStatus.error = false;
-      state.signInRequestStatus.succes = false;
+      state.loginRequestStatus.loading = false;
+      state.loginRequestStatus.error = false;
+      state.loginRequestStatus.succes = false;
+      state.fetchPofileRequestStatus.loading = false;
+      state.fetchPofileRequestStatus.error = false;
+      state.fetchPofileRequestStatus.succes = false;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(signInUser.fulfilled, (state, action) => {
-        state.signInRequestStatus.loading = false;
-        state.signInRequestStatus.error = false;
-        state.signInRequestStatus.succes = true;
+      .addCase(loginUser.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.loginRequestStatus.loading = false;
+          state.loginRequestStatus.error = false;
+          state.loginRequestStatus.succes = true;
+        } else {
+          state.loginRequestStatus.loading = false;
+          state.loginRequestStatus.error = true;
+          state.loginRequestStatus.succes = false;
+        }
+      })
+      .addCase(loginUser.pending, (state, action) => {
+        state.loginRequestStatus.loading = true;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loginRequestStatus.loading = false;
+        state.loginRequestStatus.succes = false;
+        state.loginRequestStatus.error = true;
+      });
+
+    builder
+      .addCase(fetchProfile.fulfilled, (state, action) => {
+        state.fetchPofileRequestStatus.loading = false;
+        state.fetchPofileRequestStatus.error = false;
+        state.fetchPofileRequestStatus.succes = true;
         state.profile = action.payload;
       })
-      .addCase(signInUser.pending, (state, action) => {
-        state.signInRequestStatus.loading = true;
+      .addCase(fetchProfile.pending, (state, action) => {
+        state.fetchPofileRequestStatus.loading = true;
       })
-      .addCase(signInUser.rejected, (state, action) => {
-        state.signInRequestStatus.loading = false;
-        state.signInRequestStatus.succes = false;
-        state.signInRequestStatus.error = true;
+      .addCase(fetchProfile.rejected, (state, action) => {
+        state.fetchPofileRequestStatus.loading = false;
+        state.fetchPofileRequestStatus.succes = false;
+        state.fetchPofileRequestStatus.error = true;
       });
   },
 });
