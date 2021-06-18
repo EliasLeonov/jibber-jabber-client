@@ -4,14 +4,14 @@ import PrivateProfileScreen from "./private.profile.screen";
 import PublicProfileScreen from "./public.profile.screen";
 
 interface ParamTypes {
-  id: string;
+  username: string;
 }
 
-const ProfileScreen = ({ match }) => {
-  const { id } = useParams<ParamTypes>();
+const ProfileScreen = () => {
+  const { username } = useParams<ParamTypes>();
   const profile = useProfileSelector((state) => state.profile);
 
-  if (profile && profile.id == id) {
+  if (profile && (profile.username == username || !username)) {
     return <PrivateProfileScreen />;
   }
 

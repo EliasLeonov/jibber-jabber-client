@@ -1,9 +1,14 @@
 import { Container, TextField } from "@material-ui/core";
 import { useProfileSelector } from "../../storage/app.selectors";
+import LoadingScreen from "../loading.screen";
 import ChangePassword from "./change.password";
 
 const PrivateProfileScreen = () => {
   const profile = useProfileSelector((state) => state.profile);
+
+  if (!profile) {
+    return <LoadingScreen />;
+  }
 
   return (
     <Container>
@@ -12,7 +17,7 @@ const PrivateProfileScreen = () => {
           variant="outlined"
           margin="normal"
           disabled
-          defaultValue={profile.username}
+          value={profile.username}
           fullWidth
           id="username"
           label="Username"
@@ -23,7 +28,7 @@ const PrivateProfileScreen = () => {
           variant="outlined"
           margin="normal"
           disabled
-          defaultValue={profile.firstname + " " + profile.lastname}
+          value={profile.firstname + " " + profile.lastname}
           fullWidth
           id="name"
           label="Name"
@@ -35,7 +40,7 @@ const PrivateProfileScreen = () => {
           margin="normal"
           disabled
           fullWidth
-          defaultValue={profile.mail}
+          value={profile.mail}
           id="email"
           label="Email Address"
           name="email"

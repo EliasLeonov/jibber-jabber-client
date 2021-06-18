@@ -28,7 +28,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: "app",
   storage,
-  blacklist: ["feed", "register", "signIn"],
+  blacklist: ["feed", "register"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

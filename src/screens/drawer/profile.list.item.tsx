@@ -4,13 +4,15 @@ import { withRouter } from "react-router-dom";
 import { useProfileSelector } from "../../storage/app.selectors";
 
 const ProfileListItem = ({ history }) => {
-  const id: string = useProfileSelector((state) => state.profile.id);
+  const username: string = useProfileSelector(
+    (state) => state.profile.username
+  );
 
   return (
     <ListItem
       button
       key={"Profile"}
-      onClick={() => history.push(`/profile/${id}`)}
+      onClick={() => history.push(`/profile/${username}`)}
     >
       <ListItemText primary={"Profile"} />
     </ListItem>

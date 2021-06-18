@@ -1,22 +1,31 @@
 import { Container, TextField } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import LoadingScreen from "../loading.screen";
+import { fetchPublicProfile } from "./profile.request";
 
 interface ParamTypes {
-  id: string;
+  username: string;
 }
 
 const PublicProfileScreen = () => {
-  const { id } = useParams<ParamTypes>();
-  const [profile, setProfile] = useState({
-    username: undefined,
-    id,
-    firstname: undefined,
-  });
+  const { username } = useParams<ParamTypes>();
+  const [profile, setProfile] = useState(undefined);
 
   useEffect(() => {
-    setProfile({ username: "PabloRocks", id, firstname: "Pablo" });
+    async function fetchProfile() {
+      const profile = await fetchPublicProfile(username).then(
+        (res) => res.data
+      );
+      setProfile(profile);
+    }
+
+    fetchProfile();
   }, []);
+
+  if (!profile) {
+    return <LoadingScreen />;
+  }
 
   return (
     <Container>
@@ -25,7 +34,7 @@ const PublicProfileScreen = () => {
           variant="outlined"
           margin="normal"
           disabled
-          defaultValue={profile.username}
+          value={profile.username}
           fullWidth
           id="username"
           label="Username"
@@ -36,7 +45,7 @@ const PublicProfileScreen = () => {
           variant="outlined"
           margin="normal"
           disabled
-          defaultValue={profile.firstname}
+          value={profile.firstname}
           fullWidth
           id="name"
           label="Name"
