@@ -33,11 +33,13 @@ const FeedScreen = () => {
           variant="outlined"
           color="primary"
           className={styles.postButton}
-          onClick={async () =>
-            await dispatch(
-              createPost({ username: "bauti", text: "my first jab" })
-            )
-          }
+          onClick={async () => {
+            if (value.length == 0) {
+              return;
+            }
+            await dispatch(createPost({ text: value }));
+            setValue("");
+          }}
         >
           Post
         </Button>

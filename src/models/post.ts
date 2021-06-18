@@ -5,5 +5,6 @@ export default interface Post {
     id: string;
     username: string;
   };
+  likes: number;
   timestamp: string;
 }

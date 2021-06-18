@@ -1,12 +1,8 @@
-const axios = require("axios").default;
+import { get, post } from "../../utils/HttpClient";
 
-export const createNewPost = (username: string, text: string) =>
-  axios({
-    method: "post",
-    url: "http://localhost:9001/post/save",
-    haders: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-    },
-    data: { username, text },
-  });
+export const createNewPost = (text: string) => post("/api/post/save", { text });
+
+export const fetchFeed = () => get("/api/post/get-feed");
+
+export const likePost = (userId: string, postId: string) =>
+  post("/api/like", { userId, postId });

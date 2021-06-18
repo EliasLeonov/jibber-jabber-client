@@ -1,45 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Post from "../models/post";
-import { createNewPost } from "../screens/feed/post.requests";
+import { createNewPost, fetchFeed } from "../screens/feed/post.requests";
 
-const moment = require("moment");
-
-export const fetchPosts = createAsyncThunk("feed/posts", () => {
-  return [
-    {
-      id: "1",
-      author: {
-        id: "123",
-        username: "Pablo",
-      },
-      text: "$BTC to the moon!!!!",
-      timestamp: moment().format("LTS"),
-    },
-    {
-      id: "2",
-      author: {
-        id: "2",
-        username: "Bauti",
-      },
-      text: "insert elon musk meme",
-      timestamp: moment().format("LTS"),
-    },
-    {
-      id: "3",
-      author: {
-        id: "1",
-        username: "Pablo",
-      },
-      text: "yes sir..",
-      timestamp: moment().format("LTS"),
-    },
-  ];
+export const fetchPosts = createAsyncThunk("feed/posts", async () => {
+  const feed: [] = await fetchFeed().then((res) => res.data);
+  return feed;
 });
 
 export const createPost = createAsyncThunk(
   "feed/createPost",
   async (payload: any) => {
-    const post: Post = await createNewPost(payload.username, payload.text)
+    const post: Post = await createNewPost(payload.text)
       .then((res) => res.data)
       .catch((error) => console.error(error));
     return post;
@@ -54,9 +25,11 @@ export const FeedSlice = createSlice({
       success: false,
       error: false,
     },
-    loadingPostCreation: false,
-    loadingPostCreationSucces: false,
-    loadingPostCreationError: false,
+    postCreationRequestStatus: {
+      loading: false,
+      success: false,
+      error: false,
+    },
     posts: [],
   },
   reducers: {
@@ -80,16 +53,18 @@ export const FeedSlice = createSlice({
 
     builder
       .addCase(createPost.fulfilled, (state, action) => {
-        state.loadingPostCreationSucces = true;
-        state.loadingPostCreation = false;
+        state.postCreationRequestStatus.success = true;
+        state.postCreationRequestStatus.loading = false;
+        state.postCreationRequestStatus.error = false;
         state.posts.push(action.payload);
       })
       .addCase(createPost.pending, (state, action) => {
-        state.loadingPostCreation = true;
+        state.postCreationRequestStatus.loading = true;
       })
       .addCase(createPost.rejected, (state, action) => {
-        state.loadingPostCreation = false;
-        state.loadingPostCreationError = true;
+        state.postCreationRequestStatus.success = false;
+        state.postCreationRequestStatus.loading = false;
+        state.postCreationRequestStatus.error = true;
       });
   },
 });
