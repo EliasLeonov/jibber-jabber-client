@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchPrivateProfile } from "../screens/profile/profile.request";
 import { login } from "../screens/signin/signin.request";
 
 export const loginUser = createAsyncThunk(
@@ -13,10 +12,16 @@ export const loginUser = createAsyncThunk(
 );
 
 export const fetchProfile = createAsyncThunk("profile/fetch", async () => {
-  const profile = await fetchPrivateProfile()
-    .then((res) => res.data)
-    .catch((error) => console.error(error));
-  return profile;
+  //const profile = await fetchPrivateProfile()
+  // .then((res) => res.data)
+  // .catch((error) => console.error(error));
+  return {
+    id: "123455",
+    username: "bauti",
+    firstname: "bauti",
+    lastname: "baiocchi",
+    mail: "b@b.com",
+  };
 });
 
 export const ProfileSlice = createSlice({

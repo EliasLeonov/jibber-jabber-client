@@ -11,11 +11,11 @@ const PublicProfileScreen = () => {
   const [profile, setProfile] = useState({
     username: undefined,
     id,
-    firstName: undefined,
+    firstname: undefined,
   });
 
   useEffect(() => {
-    setProfile({ username: "PabloRocks", id, firstName: "Pablo" });
+    setProfile({ username: "PabloRocks", id, firstname: "Pablo" });
   }, []);
 
   return (
@@ -36,7 +36,7 @@ const PublicProfileScreen = () => {
           variant="outlined"
           margin="normal"
           disabled
-          defaultValue={profile.firstName}
+          defaultValue={profile.firstname}
           fullWidth
           id="name"
           label="Name"

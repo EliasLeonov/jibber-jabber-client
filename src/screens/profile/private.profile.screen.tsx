@@ -23,7 +23,7 @@ const PrivateProfileScreen = () => {
           variant="outlined"
           margin="normal"
           disabled
-          defaultValue={profile.firstName + " " + profile.lastName}
+          defaultValue={profile.firstname + " " + profile.lastname}
           fullWidth
           id="name"
           label="Name"
