@@ -6,6 +6,7 @@ import { CoreSlice } from "./core.reducer";
 import { FeedSlice } from "./feed.reducer";
 import { ProfileSlice } from "./profile.reducer";
 import { RegisterSlice } from "./register.reducer";
+import { UsersSlice } from "./users.reducer";
 
 const feedConfig = {
   key: "feed",
@@ -17,18 +18,24 @@ const registerConfig = {
   storage: storage,
 };
 
+const usersConfig = {
+  key: "users",
+  storage: storage,
+};
+
 const rootReducer = combineReducers({
   register: persistReducer(registerConfig, RegisterSlice.reducer),
   core: CoreSlice.reducer,
   feed: persistReducer(feedConfig, FeedSlice.reducer),
   conversation: ConversationSlice.reducer,
   profile: ProfileSlice.reducer,
+  users: persistReducer(usersConfig, UsersSlice.reducer),
 });
 
 const persistConfig = {
   key: "app",
   storage,
-  blacklist: ["feed", "register"],
+  blacklist: ["feed", "register", "users"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

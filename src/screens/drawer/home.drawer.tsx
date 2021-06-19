@@ -9,9 +9,10 @@ import {
 import React from "react";
 import { useAppDispatch } from "../../storage/app.selectors";
 import { clearProfile } from "../../storage/profile.reducer";
-import FeedListItem from "./feed.list.item";
-import MessagesListItem from "./message.list.item";
-import ProfileListItem from "./profile.list.item";
+import FeedListItem from "../feed/feed.list.item";
+import MessagesListItem from "../messages/message.list.item";
+import ProfileListItem from "../profile/profile.list.item";
+import UsersListItem from "../users/users.list.item";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,6 +32,7 @@ const CustomDrawer = () => {
       <Divider />
       <List>
         <FeedListItem />
+        <UsersListItem />
         <MessagesListItem />
         <ProfileListItem />
         <Divider />
