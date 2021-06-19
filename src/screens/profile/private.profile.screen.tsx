@@ -1,5 +1,6 @@
 import { Container, TextField } from "@material-ui/core";
 import { useProfileSelector } from "../../storage/app.selectors";
+import PostsList from "../feed/posts.list";
 import LoadingScreen from "../loading.screen";
 import ChangePassword from "./change.password";
 
@@ -49,6 +50,9 @@ const PrivateProfileScreen = () => {
         />
         <ChangePassword />
       </form>
+      <Container>
+        <PostsList posts={profile.posts} />
+      </Container>
     </Container>
   );
 };

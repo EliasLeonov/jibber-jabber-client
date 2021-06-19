@@ -33,7 +33,15 @@ export const FeedSlice = createSlice({
     posts: [],
   },
   reducers: {
-    favoritePost: (state, action) => {},
+    clearFeed: (state) => {
+      state.posts = [];
+      state.fetchPostsRequestStatus.loading = false;
+      state.fetchPostsRequestStatus.error = false;
+      state.fetchPostsRequestStatus.success = false;
+      state.postCreationRequestStatus.loading = false;
+      state.postCreationRequestStatus.error = false;
+      state.postCreationRequestStatus.success = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -68,5 +76,7 @@ export const FeedSlice = createSlice({
       });
   },
 });
+
+export const { clearFeed } = FeedSlice.actions;
 
 export type FeedState = ReturnType<typeof FeedSlice.reducer>;

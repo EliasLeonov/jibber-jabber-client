@@ -1,6 +1,7 @@
 import { Container, TextField } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import PostsList from "../feed/posts.list";
 import LoadingScreen from "../loading.screen";
 import { fetchPublicProfile } from "./profile.request";
 
@@ -53,6 +54,9 @@ const PublicProfileScreen = () => {
           autoFocus
         />
       </form>
+      <Container>
+        <PostsList posts={profile.posts} />
+      </Container>
     </Container>
   );
 };

@@ -5,6 +5,7 @@ import { CoreState } from "./core.reducer";
 import { FeedState } from "./feed.reducer";
 import { ProfileState } from "./profile.reducer";
 import { RegisterState } from "./register.reducer";
+import { UsersState } from "./users.reducer";
 
 export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;
 export const useAppDispatch = () => useDispatch<AppDispatch>();
@@ -25,3 +26,6 @@ export const useConversationSelector: TypedUseSelectorHook<ConversationState> =
 export const useProfileSelector: TypedUseSelectorHook<ProfileState> = (
   selector
 ) => useAppSelector((state) => selector(state.profile));
+
+export const useUsersSelector: TypedUseSelectorHook<UsersState> = (selector) =>
+  useAppSelector((state) => selector(state.users));

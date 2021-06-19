@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Post from "../../models/post";
 import { useAppDispatch, useFeedSelector } from "../../storage/app.selectors";
 import { createPost, fetchPosts } from "../../storage/feed.reducer";
-import PostComponent from "./post.component";
+import PostsList from "./posts.list";
 
 const useStyles = makeStyles((theme) => ({
   textContainer: {
@@ -53,11 +53,7 @@ const FeedScreen = () => {
           variant="outlined"
         />
       </Container>
-      <Container>
-        {posts.map((x) => (
-          <PostComponent {...x} key={x.id} />
-        ))}
-      </Container>
+      <PostsList posts={posts} />
     </Container>
   );
 };

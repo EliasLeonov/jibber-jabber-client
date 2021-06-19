@@ -1,8 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { searchUsers } from "../screens/users/users.request";
 
-export const search = createAsyncThunk("users/search", async () => {
-  const users: [] = [];
-  return users;
+export const search = createAsyncThunk("users/search", async (payload: any) => {
+  const user = await searchUsers(payload.username).then((res) => res.data);
+  if (user) {
+    return [user];
+  }
+  return [];
 });
 
 export const UsersSlice = createSlice({
@@ -15,13 +19,21 @@ export const UsersSlice = createSlice({
       success: false,
     },
   },
-  reducers: {},
+  reducers: {
+    clearUsers: (state) => {
+      state.users = [];
+      state.searchRequestStatus.loading = false;
+      state.searchRequestStatus.error = false;
+      state.searchRequestStatus.success = false;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(search.rejected, (state, action) => {
         state.searchRequestStatus.error = true;
         state.searchRequestStatus.loading = false;
         state.searchRequestStatus.success = false;
+        state.users = [];
       })
       .addCase(search.fulfilled, (state, action) => {
         state.searchRequestStatus.loading = false;
@@ -33,5 +45,7 @@ export const UsersSlice = createSlice({
       });
   },
 });
+
+export const { clearUsers } = UsersSlice.actions;
 
 export type UsersState = ReturnType<typeof UsersSlice.reducer>;

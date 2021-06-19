@@ -24,12 +24,12 @@ export const ProfileSlice = createSlice({
   initialState: {
     loginRequestStatus: {
       loading: false,
-      succes: false,
+      success: false,
       error: false,
     },
     fetchPofileRequestStatus: {
       loading: false,
-      succes: false,
+      success: false,
       error: false,
     },
     profile: undefined,
@@ -39,10 +39,10 @@ export const ProfileSlice = createSlice({
       state.profile = undefined;
       state.loginRequestStatus.loading = false;
       state.loginRequestStatus.error = false;
-      state.loginRequestStatus.succes = false;
+      state.loginRequestStatus.success = false;
       state.fetchPofileRequestStatus.loading = false;
       state.fetchPofileRequestStatus.error = false;
-      state.fetchPofileRequestStatus.succes = false;
+      state.fetchPofileRequestStatus.success = false;
     },
   },
   extraReducers: (builder) => {
@@ -51,11 +51,11 @@ export const ProfileSlice = createSlice({
         if (action.payload) {
           state.loginRequestStatus.loading = false;
           state.loginRequestStatus.error = false;
-          state.loginRequestStatus.succes = true;
+          state.loginRequestStatus.success = true;
         } else {
           state.loginRequestStatus.loading = false;
           state.loginRequestStatus.error = true;
-          state.loginRequestStatus.succes = false;
+          state.loginRequestStatus.success = false;
         }
       })
       .addCase(loginUser.pending, (state, action) => {
@@ -63,7 +63,7 @@ export const ProfileSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loginRequestStatus.loading = false;
-        state.loginRequestStatus.succes = false;
+        state.loginRequestStatus.success = false;
         state.loginRequestStatus.error = true;
       });
 
@@ -71,7 +71,7 @@ export const ProfileSlice = createSlice({
       .addCase(fetchProfile.fulfilled, (state, action) => {
         state.fetchPofileRequestStatus.loading = false;
         state.fetchPofileRequestStatus.error = false;
-        state.fetchPofileRequestStatus.succes = true;
+        state.fetchPofileRequestStatus.success = true;
         state.profile = action.payload;
       })
       .addCase(fetchProfile.pending, (state, action) => {
@@ -79,7 +79,7 @@ export const ProfileSlice = createSlice({
       })
       .addCase(fetchProfile.rejected, (state, action) => {
         state.fetchPofileRequestStatus.loading = false;
-        state.fetchPofileRequestStatus.succes = false;
+        state.fetchPofileRequestStatus.success = false;
         state.fetchPofileRequestStatus.error = true;
       });
   },
