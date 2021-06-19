@@ -10,7 +10,7 @@ const UserComponent = (props) => {
   return (
     <Container className={styles.root}>
       <Card>
-        <CardHeader title={props.username} />
+        <CardHeader title={props.firstname} subheader={`@${props.username}`} />
       </Card>
     </Container>
   );

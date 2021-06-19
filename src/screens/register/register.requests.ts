@@ -1,10 +1,10 @@
 import { post } from "../../utils/HttpClient";
 
-export const register = ({ username, password, mail, name, lastname }) =>
+export const register = ({ username, password, mail, firstname, lastname }) =>
   post("/auth/user/register", {
     username,
     password,
     mail,
-    name,
+    firstname,
     lastname,
   });

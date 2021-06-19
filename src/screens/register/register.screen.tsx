@@ -1,13 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Redirect } from "react-router-dom";
-import { useRegisterSelector } from "../../storage/app.selectors";
+import {
+  useAppDispatch,
+  useRegisterSelector,
+} from "../../storage/app.selectors";
+import { reset } from "../../storage/register.reducer";
 import LoadingScreen from "../loading.screen";
 import RegisterForm from "./register.form";
 
 const RegisterScreen = () => {
-  const { loading, succes } = useRegisterSelector((state) => state);
+  const { loading, success } = useRegisterSelector((state) => state);
+  const dispatch = useAppDispatch();
 
-  if (succes) {
+  useEffect(() => {
+    dispatch(reset());
+  }, []);
+
+  if (success) {
     return <Redirect to="/signin" />;
   }
 

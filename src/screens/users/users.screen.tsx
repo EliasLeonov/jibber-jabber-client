@@ -45,7 +45,7 @@ const UsersScreen = () => {
           multiline
           rowsMax={4}
           value={value}
-          placeholder={"username"}
+          placeholder={"@username"}
           onChange={(e) => setValue(e.target.value)}
           variant="outlined"
         />

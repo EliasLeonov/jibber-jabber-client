@@ -1,11 +1,25 @@
 import { Container, TextField } from "@material-ui/core";
-import { useProfileSelector } from "../../storage/app.selectors";
+import { useEffect } from "react";
+import {
+  useAppDispatch,
+  useProfileSelector,
+} from "../../storage/app.selectors";
+import { fetchProfile } from "../../storage/profile.reducer";
 import PostsList from "../feed/posts.list";
 import LoadingScreen from "../loading.screen";
 import ChangePassword from "./change.password";
 
 const PrivateProfileScreen = () => {
   const profile = useProfileSelector((state) => state.profile);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    async function fetch() {
+      await dispatch(fetchProfile());
+    }
+
+    fetch();
+  }, []);
 
   if (!profile) {
     return <LoadingScreen />;
