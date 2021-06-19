@@ -6,5 +6,6 @@ export default interface Post {
     username: string;
   };
   likes: number;
+  isLiked: boolean;
   timestamp: string;
 }

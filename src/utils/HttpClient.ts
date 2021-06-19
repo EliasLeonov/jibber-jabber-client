@@ -23,3 +23,13 @@ export const post = async (url: string, body: any, args?: any) => {
       throw error;
     });
 };
+
+export const Delete = async (url: string, args?: any) => {
+  return client
+    .delete(url, {
+      ...args,
+    })
+    .catch((error) => {
+      throw error;
+    });
+};

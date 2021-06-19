@@ -11,7 +11,7 @@ import {
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import React from "react";
 import { useProfileSelector } from "../../storage/app.selectors";
-import { likePost } from "./post.requests";
+import { likePost, unlikePost } from "./post.requests";
 
 const useStyles = makeStyles((theme) => ({
   root: { marginTop: 25, width: "90%" },
@@ -25,7 +25,11 @@ const PostComponent = (props) => {
 
   const handleLike = async () => {
     if (profile && profile.id != props.author.id) {
-      await likePost(profile.id, props.id);
+      if (props.isLiked) {
+        await unlikePost(props.id);
+      } else {
+        await likePost(profile.id, props.id);
+      }
     }
   };
 
@@ -43,7 +47,10 @@ const PostComponent = (props) => {
         </CardContent>
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
-            <FavoriteIcon onClick={async (e) => await handleLike()} />
+            <FavoriteIcon
+              onClick={async () => await handleLike()}
+              style={{ fill: props.isLiked ? "red" : null }}
+            />
           </IconButton>
         </CardActions>
       </Card>
