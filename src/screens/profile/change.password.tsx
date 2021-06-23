@@ -1,6 +1,7 @@
 import { Button, Container, TextField } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import React, { useState } from "react";
+import { changePassword } from "./profile.request";
 
 const ChangePassword = () => {
   const [showFields, setShowFields] = useState(false);
@@ -34,7 +35,13 @@ const ChangePassword = () => {
           onChange={(e) => setNewPassword(e.target.value)}
         />
         <Grid item xs={12} sm={6}>
-          <Button variant="outlined" color="primary">
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={async () => {
+              await changePassword(oldPassword, newPassword);
+            }}
+          >
             Change
           </Button>
           <Button

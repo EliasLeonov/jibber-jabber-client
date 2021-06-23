@@ -17,6 +17,7 @@ const RegisterScreen = () => {
   }, []);
 
   if (success) {
+    console.log("here");
     return <Redirect to="/signin" />;
   }
 

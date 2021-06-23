@@ -1,5 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchPrivateProfile } from "../screens/profile/profile.request";
+import {
+  fetchPrivateProfile,
+  followProfile,
+  unFollowProfile,
+} from "../screens/profile/profile.request";
 import { login } from "../screens/signin/signin.request";
 
 export const loginUser = createAsyncThunk(
@@ -19,6 +23,26 @@ export const fetchProfile = createAsyncThunk("profile/fetch", async () => {
   return profile;
 });
 
+export const followPublicProfile = createAsyncThunk(
+  "profile/followProfile",
+  async (payload: any) => {
+    const profile = await followProfile(payload.id)
+      .then((res) => res.data)
+      .catch((error) => console.error(error));
+    return profile;
+  }
+);
+
+export const unFollowPublicProfile = createAsyncThunk(
+  "profile/unFollowProfile",
+  async (payload: any) => {
+    const profile = await unFollowProfile(payload.id)
+      .then((res) => res.data)
+      .catch((error) => console.error(error));
+    return profile;
+  }
+);
+
 export const ProfileSlice = createSlice({
   name: "profile",
   initialState: {
@@ -27,7 +51,17 @@ export const ProfileSlice = createSlice({
       success: false,
       error: false,
     },
-    fetchPofileRequestStatus: {
+    fetchProfileRequestStatus: {
+      loading: false,
+      success: false,
+      error: false,
+    },
+    followProfileRequestStatus: {
+      loading: false,
+      success: false,
+      error: false,
+    },
+    unFollowProfileRequestStatus: {
       loading: false,
       success: false,
       error: false,
@@ -40,12 +74,55 @@ export const ProfileSlice = createSlice({
       state.loginRequestStatus.loading = false;
       state.loginRequestStatus.error = false;
       state.loginRequestStatus.success = false;
-      state.fetchPofileRequestStatus.loading = false;
-      state.fetchPofileRequestStatus.error = false;
-      state.fetchPofileRequestStatus.success = false;
+
+      state.fetchProfileRequestStatus.loading = false;
+      state.fetchProfileRequestStatus.error = false;
+      state.fetchProfileRequestStatus.success = false;
+
+      state.followProfileRequestStatus.loading = false;
+      state.followProfileRequestStatus.error = false;
+      state.followProfileRequestStatus.success = false;
+
+      state.unFollowProfileRequestStatus.loading = false;
+      state.unFollowProfileRequestStatus.error = false;
+      state.unFollowProfileRequestStatus.success = false;
     },
   },
   extraReducers: (builder) => {
+    builder
+      .addCase(followPublicProfile.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.followProfileRequestStatus.loading = false;
+          state.followProfileRequestStatus.error = false;
+          state.followProfileRequestStatus.success = true;
+        }
+      })
+      .addCase(followPublicProfile.pending, (state, action) => {
+        state.followProfileRequestStatus.loading = true;
+      })
+      .addCase(followPublicProfile.rejected, (state, action) => {
+        state.followProfileRequestStatus.loading = false;
+        state.followProfileRequestStatus.success = false;
+        state.followProfileRequestStatus.error = true;
+      });
+
+    builder
+      .addCase(unFollowPublicProfile.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.unFollowProfileRequestStatus.loading = false;
+          state.unFollowProfileRequestStatus.error = false;
+          state.unFollowProfileRequestStatus.success = true;
+        }
+      })
+      .addCase(unFollowPublicProfile.pending, (state, action) => {
+        state.unFollowProfileRequestStatus.loading = true;
+      })
+      .addCase(unFollowPublicProfile.rejected, (state, action) => {
+        state.unFollowProfileRequestStatus.loading = false;
+        state.unFollowProfileRequestStatus.success = false;
+        state.unFollowProfileRequestStatus.error = true;
+      });
+
     builder
       .addCase(loginUser.fulfilled, (state, action) => {
         if (action.payload) {
@@ -69,18 +146,18 @@ export const ProfileSlice = createSlice({
 
     builder
       .addCase(fetchProfile.fulfilled, (state, action) => {
-        state.fetchPofileRequestStatus.loading = false;
-        state.fetchPofileRequestStatus.error = false;
-        state.fetchPofileRequestStatus.success = true;
+        state.fetchProfileRequestStatus.loading = false;
+        state.fetchProfileRequestStatus.error = false;
+        state.fetchProfileRequestStatus.success = true;
         state.profile = action.payload;
       })
       .addCase(fetchProfile.pending, (state, action) => {
-        state.fetchPofileRequestStatus.loading = true;
+        state.fetchProfileRequestStatus.loading = true;
       })
       .addCase(fetchProfile.rejected, (state, action) => {
-        state.fetchPofileRequestStatus.loading = false;
-        state.fetchPofileRequestStatus.success = false;
-        state.fetchPofileRequestStatus.error = true;
+        state.fetchProfileRequestStatus.loading = false;
+        state.fetchProfileRequestStatus.success = false;
+        state.fetchProfileRequestStatus.error = true;
       });
   },
 });

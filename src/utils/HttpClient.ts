@@ -14,7 +14,7 @@ export const get = async (url: string, args?: any) => {
     });
 };
 
-export const post = async (url: string, body: any, args?: any) => {
+export const post = async (url: string, body?: any, args?: any) => {
   return client
     .post(url, body, {
       ...args,

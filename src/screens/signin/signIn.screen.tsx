@@ -4,13 +4,13 @@ import LoadingScreen from "../loading.screen";
 import SignInForm from "./signin.form";
 
 const SignInScreen = () => {
-  const { loginRequestStatus, fetchPofileRequestStatus } = useProfileSelector(
+  const { loginRequestStatus, fetchProfileRequestStatus } = useProfileSelector(
     (state) => state
   );
 
   return (
     <div>
-      {loginRequestStatus.loading || fetchPofileRequestStatus.loading ? (
+      {loginRequestStatus.loading || fetchProfileRequestStatus.loading ? (
         <LoadingScreen />
       ) : (
         <SignInForm />
