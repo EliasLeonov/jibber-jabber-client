@@ -29,6 +29,7 @@ const moment = require("moment");
 
 const PostComponent = (props) => {
   const profile = useProfileSelector((state) => state.profile);
+  const isLoggedIn = useProfileSelector((state) => state.profile != undefined);
   const styles = useStyles();
   const dispatch = useAppDispatch();
 
@@ -56,25 +57,27 @@ const PostComponent = (props) => {
             {props.text}
           </Typography>
         </CardContent>
-        <CardActions disableSpacing>
-          {isAuthor ? (
-            <Button
-              size="small"
-              onClick={async () => {
-                await dispatch(deleteUserPost({ postId: props.id }));
-              }}
-            >
-              Delete
-            </Button>
-          ) : (
-            <IconButton aria-label="add to favorites">
-              <FavoriteIcon
-                onClick={async () => await handleLike()}
-                style={{ fill: props.isLiked ? "red" : null }}
-              />
-            </IconButton>
-          )}
-        </CardActions>
+        {isLoggedIn && (
+          <CardActions disableSpacing>
+            {isAuthor ? (
+              <Button
+                size="small"
+                onClick={async () => {
+                  await dispatch(deleteUserPost({ postId: props.id }));
+                }}
+              >
+                Delete
+              </Button>
+            ) : (
+              <IconButton aria-label="add to favorites">
+                <FavoriteIcon
+                  onClick={async () => await handleLike()}
+                  style={{ fill: props.isLiked ? "red" : null }}
+                />
+              </IconButton>
+            )}
+          </CardActions>
+        )}
       </Card>
     </Container>
   );

@@ -12,8 +12,10 @@ import { useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import {
   useAppDispatch,
+  useFeedSelector,
   useProfileSelector,
 } from "../../storage/app.selectors";
+import { fetchPosts } from "../../storage/feed.reducer";
 import { fetchProfile } from "../../storage/profile.reducer";
 import PostsList from "../feed/posts.list";
 import LoadingScreen from "../loading.screen";
@@ -33,12 +35,14 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const PrivateProfileScreen = ({ history }) => {
   const profile = useProfileSelector((state) => state.profile);
+  const posts = useFeedSelector((state) => state.posts);
   const dispatch = useAppDispatch();
   const classes = useStyles();
 
   useEffect(() => {
     async function fetch() {
       await dispatch(fetchProfile());
+      await dispatch(fetchPosts());
     }
 
     fetch();
@@ -102,7 +106,7 @@ const PrivateProfileScreen = ({ history }) => {
         </Button>
       </form>
       <Container>
-        <PostsList posts={profile.posts} />
+        <PostsList posts={posts.filter((p) => p.author.id == profile.id)} />
       </Container>
     </Container>
   );

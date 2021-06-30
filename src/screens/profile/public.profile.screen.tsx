@@ -72,7 +72,7 @@ const PublicProfileScreen = () => {
     return <LoadingScreen />;
   }
 
-  //  console.log(profile);
+  console.log(isLoggedIn);
 
   return (
     <Container>
@@ -109,32 +109,34 @@ const PublicProfileScreen = () => {
         />
       </form>
       <Container>
-        {!isLoggedIn ? (
-          <div />
-        ) : isFollowing ? (
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={async () =>
-              await dispatch(unFollowPublicProfile({ id: profile.id })).then(
-                () => setIsFollowing(false)
-              )
-            }
-          >
-            unFollow
-          </Button>
+        {isLoggedIn ? (
+          isFollowing ? (
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={async () =>
+                await dispatch(unFollowPublicProfile({ id: profile.id })).then(
+                  () => setIsFollowing(false)
+                )
+              }
+            >
+              unFollow
+            </Button>
+          ) : (
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={async () =>
+                await dispatch(followPublicProfile({ id: profile.id })).then(
+                  () => setIsFollowing(true)
+                )
+              }
+            >
+              Follow
+            </Button>
+          )
         ) : (
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={async () =>
-              await dispatch(followPublicProfile({ id: profile.id })).then(() =>
-                setIsFollowing(true)
-              )
-            }
-          >
-            Follow
-          </Button>
+          <div />
         )}
         <PostsList posts={profile.posts} />
       </Container>
