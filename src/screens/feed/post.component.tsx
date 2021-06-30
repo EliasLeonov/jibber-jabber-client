@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardActions,
   CardContent,
@@ -10,8 +11,15 @@ import {
 } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import React from "react";
-import { useProfileSelector } from "../../storage/app.selectors";
-import { likePost, unlikePost } from "./post.requests";
+import {
+  useAppDispatch,
+  useProfileSelector,
+} from "../../storage/app.selectors";
+import {
+  deleteUserPost,
+  likeUserPost,
+  unLikeUserPost,
+} from "../../storage/feed.reducer";
 
 const useStyles = makeStyles((theme) => ({
   root: { marginTop: 25, width: "90%" },
@@ -22,13 +30,16 @@ const moment = require("moment");
 const PostComponent = (props) => {
   const profile = useProfileSelector((state) => state.profile);
   const styles = useStyles();
+  const dispatch = useAppDispatch();
+
+  const isAuthor: boolean = profile && profile.id == props.author.id;
 
   const handleLike = async () => {
-    if (profile && profile.id != props.author.id) {
+    if (!isAuthor) {
       if (props.isLiked) {
-        await unlikePost(props.id);
+        await dispatch(unLikeUserPost({ postId: props.id }));
       } else {
-        await likePost(profile.id, props.id);
+        await dispatch(likeUserPost({ userId: profile.id, postId: props.id }));
       }
     }
   };
@@ -46,12 +57,23 @@ const PostComponent = (props) => {
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            <FavoriteIcon
-              onClick={async () => await handleLike()}
-              style={{ fill: props.isLiked ? "red" : null }}
-            />
-          </IconButton>
+          {isAuthor ? (
+            <Button
+              size="small"
+              onClick={async () => {
+                await dispatch(deleteUserPost({ postId: props.id }));
+              }}
+            >
+              Delete
+            </Button>
+          ) : (
+            <IconButton aria-label="add to favorites">
+              <FavoriteIcon
+                onClick={async () => await handleLike()}
+                style={{ fill: props.isLiked ? "red" : null }}
+              />
+            </IconButton>
+          )}
         </CardActions>
       </Card>
     </Container>

@@ -8,3 +8,6 @@ export const unlikePost = (postId: string) => Delete(`/api/like/${postId}`);
 
 export const likePost = (userId: string, postId: string) =>
   post("/api/like", { userId, postId });
+
+export const deletePost = (postId: string) =>
+  Delete(`/api/post/delete/${postId}`);
