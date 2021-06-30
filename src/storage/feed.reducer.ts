@@ -196,16 +196,24 @@ export const FeedSlice = createSlice({
       });
 
     builder
-      .addCase(unlikeUserPost.fulfilled, (state, action) => {
+      .addCase(unLikeUserPost.fulfilled, (state, action) => {
         state.postUnLikeRequestStatus.success = true;
         state.postUnLikeRequestStatus.loading = false;
         state.postUnLikeRequestStatus.error = false;
         console.log(action.payload);
+        if (action.payload.unliked) {
+          state.posts = state.posts.map((p) => {
+            if (p.id === action.payload.postId) {
+              p.isLiked = false;
+            }
+            return p;
+          });
+        }
       })
-      .addCase(unlikeUserPost.pending, (state, action) => {
+      .addCase(unLikeUserPost.pending, (state, action) => {
         state.postUnLikeRequestStatus.loading = true;
       })
-      .addCase(unlikeUserPost.rejected, (state, action) => {
+      .addCase(unLikeUserPost.rejected, (state, action) => {
         state.postUnLikeRequestStatus.success = false;
         state.postUnLikeRequestStatus.loading = false;
         state.postUnLikeRequestStatus.error = true;
