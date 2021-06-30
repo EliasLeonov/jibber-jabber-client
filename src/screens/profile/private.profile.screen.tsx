@@ -1,4 +1,13 @@
-import { Button, Container, TextField } from "@material-ui/core";
+import {
+  Button,
+  Container,
+  createStyles,
+  Grid,
+  makeStyles,
+  TextField,
+  Theme,
+  Typography,
+} from "@material-ui/core";
 import { useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import {
@@ -9,9 +18,23 @@ import { fetchProfile } from "../../storage/profile.reducer";
 import PostsList from "../feed/posts.list";
 import LoadingScreen from "../loading.screen";
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(2),
+      margin: 10,
+      flexGrow: 1,
+    },
+    text: {
+      paddingRight: theme.spacing(10),
+    },
+  })
+);
+
 const PrivateProfileScreen = ({ history }) => {
   const profile = useProfileSelector((state) => state.profile);
   const dispatch = useAppDispatch();
+  const classes = useStyles();
 
   useEffect(() => {
     async function fetch() {
@@ -27,6 +50,14 @@ const PrivateProfileScreen = ({ history }) => {
 
   return (
     <Container>
+      <Grid container justify="center" className={classes.root}>
+        <Typography variant="h5" className={classes.text}>
+          Following: {profile.following.length}
+        </Typography>
+        <Typography variant="h5" className={classes.text}>
+          Followers: {profile.followers.length}
+        </Typography>
+      </Grid>
       <form noValidate>
         <TextField
           variant="outlined"
