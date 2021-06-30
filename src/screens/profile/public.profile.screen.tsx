@@ -1,4 +1,13 @@
-import { Button, Container, TextField } from "@material-ui/core";
+import {
+  Button,
+  Container,
+  createStyles,
+  Grid,
+  makeStyles,
+  TextField,
+  Theme,
+  Typography,
+} from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -17,11 +26,26 @@ interface ParamTypes {
   username: string;
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(2),
+      margin: 10,
+      flexGrow: 1,
+    },
+    text: {
+      paddingRight: theme.spacing(10),
+    },
+  })
+);
+
 const PublicProfileScreen = () => {
   const { username } = useParams<ParamTypes>();
   const isLoggedIn = useProfileSelector((state) => state.profile != undefined);
   const [profile, setProfile] = useState(undefined);
   const [isFollowing, setIsFollowing] = useState(false);
+
+  const classes = useStyles();
 
   const dispatch = useAppDispatch();
 
@@ -30,7 +54,7 @@ const PublicProfileScreen = () => {
       const profile = await fetchPublicProfile(username).then(
         (res) => res.data
       );
-      if (profile) {
+      if (profile && isLoggedIn) {
         const following: boolean = await isFollowingProfile(profile.id).then(
           (res) => res.data
         );
@@ -48,8 +72,18 @@ const PublicProfileScreen = () => {
     return <LoadingScreen />;
   }
 
+  //  console.log(profile);
+
   return (
     <Container>
+      <Grid container justify="center" className={classes.root}>
+        <Typography variant="h5" className={classes.text}>
+          Following: {profile.following.length}
+        </Typography>
+        <Typography variant="h5" className={classes.text}>
+          Followers: {profile.followers.length}
+        </Typography>
+      </Grid>
       <form noValidate>
         <TextField
           variant="outlined"

@@ -10,7 +10,7 @@ const SignInNavigator = () => {
     <Switch>
       <Route path="/signin" component={SignInScreen} />
       <Route path="/register" component={RegisterScreen} />
-      <Route path="/profile/:username?" component={ProfileScreen} />
+      <Route path="/profile/:username?" exact component={ProfileScreen} />
       <Route>
         <Redirect to="/signin" />
       </Route>
