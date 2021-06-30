@@ -6,6 +6,7 @@ import { Redirect, Route } from "react-router-dom";
 import CustomDrawer from "../screens/drawer/home.drawer";
 import FeedScreen from "../screens/feed/feed.screen";
 import MessagesScreen from "../screens/messages/messages.screen";
+import ProfileEditScreen from "../screens/profile/profile.edit.screen";
 import ProfileScreen from "../screens/profile/profile.screen";
 import UsersScreen from "../screens/users/users.screen";
 
@@ -25,7 +26,12 @@ const HomeNavigator = () => {
       <Container>
         <Switch>
           <Route path="/feed" component={FeedScreen} />
-          <Route path="/profile/:username?" component={ProfileScreen} />
+          <Route path="/profile/:username?" exact component={ProfileScreen} />
+          <Route
+            path="/profile/:username?/edit"
+            exact
+            component={ProfileEditScreen}
+          />
           <Route path="/messages" component={MessagesScreen} />
           <Route path="/users" component={UsersScreen} />
           <Route>

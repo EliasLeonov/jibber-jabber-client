@@ -1,5 +1,6 @@
-import { Container, TextField } from "@material-ui/core";
+import { Button, Container, TextField } from "@material-ui/core";
 import { useEffect } from "react";
+import { withRouter } from "react-router-dom";
 import {
   useAppDispatch,
   useProfileSelector,
@@ -7,9 +8,8 @@ import {
 import { fetchProfile } from "../../storage/profile.reducer";
 import PostsList from "../feed/posts.list";
 import LoadingScreen from "../loading.screen";
-import ChangePassword from "./change.password";
 
-const PrivateProfileScreen = () => {
+const PrivateProfileScreen = ({ history }) => {
   const profile = useProfileSelector((state) => state.profile);
   const dispatch = useAppDispatch();
 
@@ -62,7 +62,13 @@ const PrivateProfileScreen = () => {
           autoComplete="email"
           autoFocus
         />
-        <ChangePassword />
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={() => history.push(`/profile/${profile.username}/edit`)}
+        >
+          Edit
+        </Button>
       </form>
       <Container>
         <PostsList posts={profile.posts} />
@@ -71,4 +77,4 @@ const PrivateProfileScreen = () => {
   );
 };
 
-export default PrivateProfileScreen;
+export default withRouter(PrivateProfileScreen);

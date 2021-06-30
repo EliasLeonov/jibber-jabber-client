@@ -40,6 +40,7 @@ const ChangePassword = () => {
             color="primary"
             onClick={async () => {
               await changePassword(oldPassword, newPassword);
+              setShowFields(false);
             }}
           >
             Change
@@ -49,7 +50,7 @@ const ChangePassword = () => {
             color="secondary"
             onClick={() => setShowFields(false)}
           >
-            Cancle
+            Cancel
           </Button>
         </Grid>
       </Container>
