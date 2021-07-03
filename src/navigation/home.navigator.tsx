@@ -3,9 +3,9 @@ import { makeStyles } from "@material-ui/styles";
 import React from "react";
 import { Switch } from "react-router";
 import { Redirect, Route } from "react-router-dom";
+import ChatsScreen from "../screens/chats/chats.screen";
 import CustomDrawer from "../screens/drawer/home.drawer";
 import FeedScreen from "../screens/feed/feed.screen";
-import MessagesScreen from "../screens/messages/messages.screen";
 import ProfileEditScreen from "../screens/profile/profile.edit.screen";
 import ProfileScreen from "../screens/profile/profile.screen";
 import UsersScreen from "../screens/users/users.screen";
@@ -32,7 +32,7 @@ const HomeNavigator = () => {
             exact
             component={ProfileEditScreen}
           />
-          <Route path="/messages" component={MessagesScreen} />
+          <Route path="/chats" component={ChatsScreen} />
           <Route path="/users" component={UsersScreen} />
           <Route>
             <Redirect to="/feed" />

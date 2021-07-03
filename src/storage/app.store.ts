@@ -23,11 +23,16 @@ const usersConfig = {
   storage: storage,
 };
 
+const chatConfig = {
+  key: "chats",
+  storage: storage,
+};
+
 const rootReducer = combineReducers({
   register: persistReducer(registerConfig, RegisterSlice.reducer),
   core: CoreSlice.reducer,
   feed: persistReducer(feedConfig, FeedSlice.reducer),
-  conversation: ConversationSlice.reducer,
+  conversation: persistReducer(chatConfig, ConversationSlice.reducer),
   profile: ProfileSlice.reducer,
   users: persistReducer(usersConfig, UsersSlice.reducer),
 });
@@ -35,7 +40,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: "app",
   storage,
-  blacklist: ["feed", "register", "users"],
+  blacklist: ["feed", "register", "users", "chats"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -1,8 +1,8 @@
 import { Container, Divider, List, makeStyles } from "@material-ui/core";
 import React from "react";
 import { withRouter } from "react-router-dom";
+import ChatsListItem from "../chats/chats.list.item";
 import FeedListItem from "../feed/feed.list.item";
-import MessagesListItem from "../messages/message.list.item";
 import ProfileListItem from "../profile/profile.list.item";
 import UsersListItem from "../users/users.list.item";
 import LogOutListItem from "./logout.list.item";
@@ -25,7 +25,7 @@ const CustomDrawer = ({ history }) => {
       <List>
         <FeedListItem />
         <UsersListItem />
-        <MessagesListItem />
+        <ChatsListItem />
         <ProfileListItem />
         <Divider />
         <LogOutListItem />

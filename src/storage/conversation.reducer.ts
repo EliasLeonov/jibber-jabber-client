@@ -1,51 +1,59 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
-export const fetchAll = createAsyncThunk("conversation/fetchAll", async () => {
-  return [
-    {
-      id: 1,
-      authorId: "123",
-      username: "PabloRocks123",
-      firstName: "Pablo",
-      lastMessage: "Yo when are we leaving?",
-    },
-    {
-      id: 2,
-      authorId: "858585",
-      username: "BigManlo",
-      firstName: "Biggie",
-      lastMessage: "BTC is going to the moon, you know it, i know it.",
-    },
-  ];
-});
+const Stomp = require("stompjs");
+const SockJS = require("sockjs-client");
+
+const socketClient = new SockJS("http://localhost:9002/ws");
+const stompClient = Stomp.over(socketClient);
+
+const onMessageReceived = (msg) => {
+  console.log(msg);
+};
+
+const onError = (err) => {
+  console.log("Failed to connect.");
+  console.log(err);
+};
+
+const onConnected = (userId) => () => {
+  console.log("Successfully connected.");
+  stompClient.subscribe(
+    "/user/" + userId + "/queue/messages",
+    onMessageReceived
+  );
+};
 
 export const ConversationSlice = createSlice({
   name: "conversation",
   initialState: {
-    conversations: [],
-    conversationsRequestStatus: {
-      loading: false,
-      loadingSuccess: true,
-      error: false,
+    messages: [],
+    connected: false,
+  },
+  reducers: {
+    connect: (state, payload) => {
+      //@ts-ignore
+      stompClient.connect({}, onConnected(payload.userId), onError);
+      state.connected = true;
+    },
+    sendMessage: (state, payload) => {
+      //@ts-ignore
+      if (payload.msg.trim() != "") {
+        const message = {
+          //@ts-ignore
+          senderId: payload.senderId,
+          //@ts-ignore
+          receiverId: payload.receiverId,
+          //@ts-ignore
+          message: payload.msg.trim(),
+        };
+
+        stompClient.send("/app/chat", {}, JSON.stringify(message));
+      }
     },
   },
-  reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchAll.fulfilled, (state, action) => {
-        state.conversations = action.payload;
-        state.conversationsRequestStatus.loading = false;
-        state.conversationsRequestStatus.loadingSuccess = true;
-      })
-      .addCase(fetchAll.pending, (state, action) => {
-        state.conversationsRequestStatus.loading = true;
-      })
-      .addCase(fetchAll.rejected, (state, action) => {
-        state.conversationsRequestStatus.loading = false;
-        state.conversationsRequestStatus.loadingSuccess = true;
-        state.conversationsRequestStatus.error = true;
-      });
-  },
+  extraReducers: (builder) => {},
 });
+
+export const { connect, sendMessage } = ConversationSlice.actions;
 
 export type ConversationState = ReturnType<typeof ConversationSlice.reducer>;
