@@ -27,7 +27,6 @@ const HomeNavigator = () => {
   const profile = useProfileSelector((state) => state.profile);
 
   const onMessage = (msg, topic) => {
-    console.log("herere");
     dispatch(messageReceived({ message: msg }));
   };
 

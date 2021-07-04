@@ -50,7 +50,11 @@ export const ConversationSlice = createSlice({
     },
     messageReceived: (state, action) => {
       if (action.payload.message) {
-        state.messages.push(action.payload.message);
+        if (
+          !state.messages.includes((m) => m.id === action.payload.message.id)
+        ) {
+          state.messages.push(action.payload.message);
+        }
       }
     },
   },
