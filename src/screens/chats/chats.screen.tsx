@@ -1,11 +1,14 @@
 import { Button, Container, makeStyles, TextField } from "@material-ui/core";
 import { useEffect, useState } from "react";
+import { withRouter } from "react-router-dom";
 import {
   useAppDispatch,
   useConversationSelector,
   useProfileSelector,
+  useUsersSelector,
 } from "../../storage/app.selectors";
-import { connect } from "../../storage/conversation.reducer";
+import { connect, fetchAllChats } from "../../storage/conversation.reducer";
+import { getAllChatUsers } from "../../storage/users.reducer";
 import Conversation from "./conversation.card";
 
 const useStyles = makeStyles((theme) => ({
@@ -18,7 +21,19 @@ const useStyles = makeStyles((theme) => ({
   postText: { flex: 1 },
 }));
 
-const ChatsScreen = () => {
+function merge(users: any[], chats: any[]) {
+  const merged = [];
+  for (var c = 0; c < chats.length; c++) {
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].id == chats[c].receiverId) {
+        merged.push({ ...chats[c], receiver: users[i] });
+      }
+    }
+  }
+  return merged;
+}
+
+const ChatsScreen = ({ history }) => {
   const styles = useStyles();
   const dispatch = useAppDispatch();
   const [value, setValue] = useState("");
@@ -26,11 +41,28 @@ const ChatsScreen = () => {
     (state) => state.connected
   );
   const profile = useProfileSelector((state) => state.profile);
-  const conversations: any[] = [];
+  const chats: any[] = useConversationSelector((state) => state.chats);
+  const users: any[] = useUsersSelector((state) => state.users);
 
   useEffect(() => {
     dispatch(connect({ userId: profile.id }));
   }, [connected]);
+
+  useEffect(() => {
+    async function fetchChats() {
+      await dispatch(fetchAllChats({ userId: profile.id }));
+    }
+
+    fetchChats();
+  }, []);
+
+  useEffect(() => {
+    async function fetchRecipients() {
+      await dispatch(getAllChatUsers({ chats }));
+    }
+
+    fetchRecipients();
+  }, [chats]);
 
   return (
     <Container>
@@ -48,21 +80,26 @@ const ChatsScreen = () => {
           variant="outlined"
           color="primary"
           className={styles.postButton}
-          onClick={() => {}}
+          onClick={() => {
+            if (value.trim() !== "") {
+              history.push(`/chat/${value.trim()}`);
+            }
+          }}
         >
           Chat
         </Button>
       </Container>
-      {conversations.map((conv) => (
-        <Conversation
-          key={conv.id}
-          username={conv.username}
-          firstName={conv.firstName}
-          lastMessage={conv.lastMessage}
-        />
-      ))}
+      {users &&
+        chats &&
+        merge(users, chats).map((conv) => (
+          <Conversation
+            key={conv.id}
+            username={conv.receiver.username}
+            firstName={conv.receiver.firstName}
+          />
+        ))}
     </Container>
   );
 };
 
-export default ChatsScreen;
+export default withRouter(ChatsScreen);

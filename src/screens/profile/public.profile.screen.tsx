@@ -72,8 +72,6 @@ const PublicProfileScreen = () => {
     return <LoadingScreen />;
   }
 
-  console.log(isLoggedIn);
-
   return (
     <Container>
       <Grid container justify="center" className={classes.root}>

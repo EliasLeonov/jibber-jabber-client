@@ -19,4 +19,13 @@ module.exports = function (app) {
         pathRewrite: {'^/auth' : ''}
     })
   );
+
+  app.use(
+    "/chat",
+    createProxyMiddleware({
+      target: "http://localhost:9002",
+      changeOrigin: true,
+        pathRewrite: {'^/chat' : ''}
+    })
+  );
 };

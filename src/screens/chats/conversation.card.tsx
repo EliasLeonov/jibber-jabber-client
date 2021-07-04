@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  Container,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
+import { Card, CardHeader, Container, makeStyles } from "@material-ui/core";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -22,11 +15,6 @@ const Conversation = (props) => {
           subheader={`@${props.username}`}
           color="textPrimary"
         />
-        <CardContent>
-          <Typography variant="body2" color="textSecondary" component="p">
-            {props.lastMessage}
-          </Typography>
-        </CardContent>
       </Card>
     </Container>
   );

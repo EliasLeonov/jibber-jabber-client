@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { searchUsers } from "../screens/users/users.request";
+import { getUser, searchUsers } from "../screens/users/users.request";
 
 export const search = createAsyncThunk("users/search", async (payload: any) => {
   const user = await searchUsers(payload.username).then((res) => res.data);
@@ -9,11 +9,27 @@ export const search = createAsyncThunk("users/search", async (payload: any) => {
   return [];
 });
 
+export const getAllChatUsers = createAsyncThunk(
+  "users/getAllChatUsers",
+  async (payload: any) => {
+    const requests = payload.chats
+      .map((c) => c.receiverId)
+      .map((id) => getUser(id));
+    const users = await Promise.all(requests);
+    return users;
+  }
+);
+
 export const UsersSlice = createSlice({
   name: "users",
   initialState: {
     users: [],
     searchRequestStatus: {
+      loading: false,
+      error: false,
+      success: false,
+    },
+    getChatUsersRequestStatus: {
       loading: false,
       error: false,
       success: false,
@@ -33,15 +49,31 @@ export const UsersSlice = createSlice({
         state.searchRequestStatus.error = true;
         state.searchRequestStatus.loading = false;
         state.searchRequestStatus.success = false;
-        state.users = [];
       })
       .addCase(search.fulfilled, (state, action) => {
         state.searchRequestStatus.loading = false;
         state.searchRequestStatus.success = true;
-        state.users = action.payload;
+        state.users.push(...action.payload);
       })
       .addCase(search.pending, (state, action) => {
         state.searchRequestStatus.loading = true;
+      });
+
+    builder
+      .addCase(getAllChatUsers.rejected, (state, action) => {
+        state.getChatUsersRequestStatus.error = true;
+        state.getChatUsersRequestStatus.loading = false;
+        state.getChatUsersRequestStatus.success = false;
+      })
+      .addCase(getAllChatUsers.fulfilled, (state, action) => {
+        state.getChatUsersRequestStatus.loading = false;
+        state.getChatUsersRequestStatus.success = true;
+        console.log(action.payload);
+        //@ts-ignore
+        //state.users.push(...action.payload.users);
+      })
+      .addCase(getAllChatUsers.pending, (state, action) => {
+        state.getChatUsersRequestStatus.loading = true;
       });
   },
 });

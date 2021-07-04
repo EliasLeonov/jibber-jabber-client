@@ -4,6 +4,7 @@ import React from "react";
 import { Switch } from "react-router";
 import { Redirect, Route } from "react-router-dom";
 import ChatsScreen from "../screens/chats/chats.screen";
+import PrivateChatScreen from "../screens/chats/private.chat.screen";
 import CustomDrawer from "../screens/drawer/home.drawer";
 import FeedScreen from "../screens/feed/feed.screen";
 import ProfileEditScreen from "../screens/profile/profile.edit.screen";
@@ -33,6 +34,7 @@ const HomeNavigator = () => {
             component={ProfileEditScreen}
           />
           <Route path="/chats" component={ChatsScreen} />
+          <Route path="/chat/:username?" component={PrivateChatScreen} />
           <Route path="/users" component={UsersScreen} />
           <Route>
             <Redirect to="/feed" />
