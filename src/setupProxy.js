@@ -21,11 +21,11 @@ module.exports = function (app) {
   );
 
   app.use(
-    "/chat",
+    "/chat-api",
     createProxyMiddleware({
       target: "http://localhost:9002",
       changeOrigin: true,
-        pathRewrite: {'^/chat' : ''}
+        pathRewrite: {'^/chat-api' : ''}
     })
   );
 };

@@ -1,29 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getAllChats, getChatMessages } from "../screens/chats/chat.requests";
 
-const Stomp = require("stompjs");
-const SockJS = require("sockjs-client");
-
-const socketClient = new SockJS("http://localhost:9002/ws");
-const stompClient = Stomp.over(socketClient);
-
-const onMessageReceived = (msg) => {
-  console.log(`Recieved: ${msg}`);
-};
-
-const onError = (err) => {
-  console.log("Failed to connect.");
-  console.log(err);
-};
-
-const onConnected = (userId) => () => {
-  stompClient.subscribe(
-    "/user/" + userId + "/queue/messages",
-    onMessageReceived
-  );
-  console.log("Successfully connected.");
-};
-
 export const fetchAllChats = createAsyncThunk(
   "chats/fetchAllChats",
   async (payload: any) => {
@@ -68,24 +45,12 @@ export const ConversationSlice = createSlice({
     connected: false,
   },
   reducers: {
-    connect: (state, action) => {
-      //@ts-ignore
-      stompClient.connect({}, onConnected(action.payload.userId), onError);
-      state.connected = true;
+    setConnected: (state, action) => {
+      state.connected = action.payload.connected;
     },
-    sendMessage: (state, action) => {
-      //@ts-ignore
-      if (action.payload.msg.trim() != "") {
-        const message = {
-          //@ts-ignore
-          senderId: action.payload.senderId,
-          //@ts-ignore
-          receiverId: action.payload.receiverId,
-          //@ts-ignore
-          message: action.payload.msg.trim(),
-        };
-
-        stompClient.send("/app/chat", {}, JSON.stringify(message));
+    messageReceived: (state, action) => {
+      if (action.payload.message) {
+        state.messages.push(action.payload.message);
       }
     },
   },
@@ -131,6 +96,6 @@ export const ConversationSlice = createSlice({
   },
 });
 
-export const { connect, sendMessage } = ConversationSlice.actions;
+export const { setConnected, messageReceived } = ConversationSlice.actions;
 
 export type ConversationState = ReturnType<typeof ConversationSlice.reducer>;

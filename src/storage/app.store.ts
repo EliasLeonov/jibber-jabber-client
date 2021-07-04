@@ -1,5 +1,18 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { persistReducer, persistStore } from "redux-persist";
+import {
+  combineReducers,
+  configureStore,
+  getDefaultMiddleware,
+} from "@reduxjs/toolkit";
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  persistReducer,
+  persistStore,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { ConversationSlice } from "./conversation.reducer";
 import { CoreSlice } from "./core.reducer";
@@ -28,25 +41,27 @@ const chatConfig = {
   storage: storage,
 };
 
-const rootReducer = combineReducers({
-  register: persistReducer(registerConfig, RegisterSlice.reducer),
-  core: CoreSlice.reducer,
-  feed: persistReducer(feedConfig, FeedSlice.reducer),
-  conversation: persistReducer(chatConfig, ConversationSlice.reducer),
-  profile: ProfileSlice.reducer,
-  users: persistReducer(usersConfig, UsersSlice.reducer),
-});
-
-const persistConfig = {
-  key: "app",
-  storage,
-  blacklist: ["feed", "register", "users", "chats"],
+const profileConfig = {
+  key: "profile",
+  storage: storage,
 };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const rootReducer = combineReducers({
+  register: RegisterSlice.reducer,
+  core: CoreSlice.reducer,
+  feed: FeedSlice.reducer,
+  conversation: ConversationSlice.reducer,
+  profile: persistReducer(profileConfig, ProfileSlice.reducer),
+  users: UsersSlice.reducer,
+});
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: rootReducer,
+  middleware: getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+    },
+  }),
 });
 
 export type AppState = ReturnType<typeof store.getState>;

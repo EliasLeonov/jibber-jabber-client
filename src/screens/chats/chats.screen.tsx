@@ -7,7 +7,7 @@ import {
   useProfileSelector,
   useUsersSelector,
 } from "../../storage/app.selectors";
-import { connect, fetchAllChats } from "../../storage/conversation.reducer";
+import { fetchAllChats } from "../../storage/conversation.reducer";
 import { getAllChatUsers } from "../../storage/users.reducer";
 import Conversation from "./conversation.card";
 
@@ -37,16 +37,9 @@ const ChatsScreen = ({ history }) => {
   const styles = useStyles();
   const dispatch = useAppDispatch();
   const [value, setValue] = useState("");
-  const connected: boolean = useConversationSelector(
-    (state) => state.connected
-  );
   const profile = useProfileSelector((state) => state.profile);
   const chats: any[] = useConversationSelector((state) => state.chats);
   const users: any[] = useUsersSelector((state) => state.users);
-
-  useEffect(() => {
-    dispatch(connect({ userId: profile.id }));
-  }, [connected]);
 
   useEffect(() => {
     async function fetchChats() {

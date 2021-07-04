@@ -7,13 +7,19 @@ import {
   Theme,
   Typography,
 } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import SocketJsClient from "react-stomp";
 import {
   useAppDispatch,
+  useConversationSelector,
   useProfileSelector,
 } from "../../storage/app.selectors";
-import { fetchMessages, sendMessage } from "../../storage/conversation.reducer";
+import {
+  fetchMessages,
+  messageReceived,
+  setConnected,
+} from "../../storage/conversation.reducer";
 import LoadingScreen from "../loading.screen";
 import { fetchPublicProfile } from "../profile/profile.request";
 
@@ -43,11 +49,28 @@ const useStyles = makeStyles((theme: Theme) =>
 const PrivateChatScreen = () => {
   const { username } = useParams<ParamTypes>();
   const dispatch = useAppDispatch();
+  let client: any = useRef(undefined);
   const [value, setValue] = useState("");
+  const connected: boolean = useConversationSelector(
+    (state) => state.connected
+  );
   const styles = useStyles();
   const myProfile = useProfileSelector((state) => state.profile);
   const [profile, setProfile] = useState(undefined);
-  const messages = [];
+  const messages = useConversationSelector((state) => state.messages);
+
+  const sendMessage = () => {
+    if (value.trim() !== "") {
+      const message = {
+        msg: value.trim(),
+        senderId: myProfile.id,
+        receiverId: profile.id,
+      };
+
+      setValue("");
+      client.sendMessage(`/app/chat`, JSON.stringify(message));
+    }
+  };
 
   useEffect(() => {
     async function fetchProfile() {
@@ -69,6 +92,11 @@ const PrivateChatScreen = () => {
     fetchProfile();
   }, []);
 
+  const onMessage = (msg, topic) => {
+    console.log("MESAGE RECEIVED");
+    dispatch(messageReceived({ message: msg }));
+  };
+
   if (!profile) {
     return <LoadingScreen />;
   }
@@ -85,11 +113,16 @@ const PrivateChatScreen = () => {
     <Container className={styles.container}>
       <Container>
         <Typography variant="h3">{username}</Typography>
+        <Typography variant="h3">{connected}</Typography>
       </Container>
       <Container className={styles.messageContainer}>
-        {messages.map((m) => {
-          return <label>m</label>;
-        })}
+        {messages
+          .filter(
+            (m) => m.receiverId === profile.id || m.senderId === profile.id
+          )
+          .map((m) => {
+            return <label>MESSAGE</label>;
+          })}
       </Container>
       <Container className={styles.textContainer}>
         <TextField
@@ -105,22 +138,27 @@ const PrivateChatScreen = () => {
           variant="outlined"
           color="primary"
           className={styles.postButton}
-          onClick={() => {
-            if (value.trim() !== "") {
-              dispatch(
-                sendMessage({
-                  msg: value.trim(),
-                  senderId: myProfile.id,
-                  receiverId: profile.id,
-                })
-              );
-              setValue("");
-            }
-          }}
+          onClick={sendMessage}
         >
           Send
         </Button>
       </Container>
+      {profile && myProfile && (
+        <SocketJsClient
+          url={"http://localhost:9002/ws"}
+          topics={[`/user/${myProfile.id}/queue/messages`]}
+          ref={(c) => {
+            client = c;
+          }}
+          onConnect={() => {
+            dispatch(setConnected(true));
+          }}
+          onDisconnect={() => dispatch(setConnected(false))}
+          onConnectFailure={() => dispatch(setConnected(false))}
+          onMessage={onMessage}
+          debug={true}
+        />
+      )}
     </Container>
   );
 };
