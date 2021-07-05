@@ -10,16 +10,13 @@ ENV PATH /app/node_modules/.bin:$PATH
 # install app dependencies
 COPY package.json ./
 COPY package-lock.json ./
-
-RUN npm install && npm install -g react-scripts && mkdir /jibber-jabber-front && mv ./node_modules ./jibber-jabber-front
-
-WORKDIR /jibber-jabber-front
+RUN npm install 
+RUN npm install -g react-scripts
 
 # add app
-COPY . .
-
-RUN npm run build
+COPY . ./
 
 EXPOSE 3000
 
+# start app
 CMD ["npm", "run", "start"]
