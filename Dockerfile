@@ -1,5 +1,5 @@
 # pull official base image
-FROM node:latest as build
+FROM node:latest
 
 # set working directory
 WORKDIR /app
@@ -20,10 +20,6 @@ COPY . .
 
 RUN npm run build
 
-FROM nginx:stable-alpine
-COPY --from=build /jibber-jabber-front/build /usr/share/nginx/html
-COPY --from=build /jibber-jabber-front/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 3000
 
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "run", "start"]
