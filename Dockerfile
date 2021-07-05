@@ -5,13 +5,13 @@ FROM node:latest
 WORKDIR /app
 
 # add `/app/node_modules/.bin` to $PATH
-#ENV PATH /app/node_modules/.bin:$PATH
+ENV PATH /app/node_modules/.bin:$PATH
 
 # install app dependencies
 COPY package.json ./
 COPY package-lock.json ./
 
-RUN npm install && npm install react-scripts && mkdir /jibber-jabber-front && mv ./node_modules ./jibber-jabber-front
+RUN npm install && npm install -g react-scripts && mkdir /jibber-jabber-front && mv ./node_modules ./jibber-jabber-front
 
 WORKDIR /jibber-jabber-front
 
