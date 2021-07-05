@@ -11,7 +11,7 @@ WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
 
-RUN npm install && mkdir /jibber-jabber-front && mv ./node_modules ./jibber-jabber-front
+RUN npm install && npm install react-scripts && mkdir /jibber-jabber-front && mv ./node_modules ./jibber-jabber-front
 
 WORKDIR /jibber-jabber-front
 
