@@ -52,7 +52,12 @@ const MessageComponent = (props) => {
   const { message, senderId } = props.message;
   const mine = useProfileSelector((state) => state.profile.id == senderId);
   return (
-    <Container style={{ textAlign: mine ? "right" : "left" }}>
+    <Container
+      style={{
+        textAlign: mine ? "right" : "left",
+        backgroundColor: mine ? "lightgrey" : "white",
+      }}
+    >
       <label>{message}</label>
     </Container>
   );
@@ -124,13 +129,15 @@ const PrivateChatScreen = () => {
   return (
     <Container className={styles.container}>
       <Container className={styles.headingContainer}>
-        <Typography variant="h3">{username}</Typography>
+        <Typography variant="h3">Chatting with {username}</Typography>
         <Typography variant="h3">{connected}</Typography>
       </Container>
       <Container className={styles.messageContainer}>
         {messages
           .filter(
-            (m) => m.senderId == myProfile.id || m.receiverId == myProfile.id
+            (m) =>
+              (m.senderId == myProfile.id && m.receiverId == profile.id) ||
+              (m.senderId == profile.id && m.receiverId == myProfile.id)
           )
           .sort((a, b) => +a.id - +b.id)
           .map((m) => {
@@ -164,10 +171,10 @@ const PrivateChatScreen = () => {
             client = c;
           }}
           onConnect={() => {
-            dispatch(setConnected(true));
+            dispatch(setConnected({ connected: true }));
           }}
-          onDisconnect={() => dispatch(setConnected(false))}
-          onConnectFailure={() => dispatch(setConnected(false))}
+          onDisconnect={() => dispatch(setConnected({ connected: false }))}
+          onConnectFailure={() => dispatch(setConnected({ connected: false }))}
           onMessage={onMessage}
           debug={true}
         />

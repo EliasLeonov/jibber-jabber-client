@@ -54,9 +54,9 @@ const HomeNavigator = () => {
         <SocketJsClient
           url={"http://localhost:9002/ws"}
           topics={[`/user/${profile.id}/queue/messages`]}
-          onConnect={() => dispatch(setConnected(true))}
-          onDisconnect={() => dispatch(setConnected(false))}
-          onConnectFailure={() => dispatch(setConnected(false))}
+          onConnect={() => dispatch(setConnected({ connected: true }))}
+          onDisconnect={() => dispatch(setConnected({ connected: false }))}
+          onConnectFailure={() => dispatch(setConnected({ connected: false }))}
           onMessage={onMessage}
           debug={true}
         />
