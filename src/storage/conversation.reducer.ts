@@ -57,6 +57,14 @@ export const ConversationSlice = createSlice({
         }
       }
     },
+    messageRead: (state, action) => {
+      state.messages = state.messages.map((m) => {
+        if (m.id === action.payload.message.id) {
+          return { ...m, status: "READ" };
+        }
+        return m;
+      });
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -100,6 +108,7 @@ export const ConversationSlice = createSlice({
   },
 });
 
-export const { setConnected, messageReceived } = ConversationSlice.actions;
+export const { setConnected, messageReceived, messageRead } =
+  ConversationSlice.actions;
 
 export type ConversationState = ReturnType<typeof ConversationSlice.reducer>;

@@ -17,7 +17,7 @@ import {
 } from "../../storage/app.selectors";
 import {
   fetchMessages,
-  messageReceived,
+  messageRead,
   setConnected,
 } from "../../storage/conversation.reducer";
 import LoadingScreen from "../loading.screen";
@@ -32,19 +32,31 @@ const useStyles = makeStyles((theme: Theme) =>
     container: {
       flex: 1,
     },
+    headingContainer: { marginBottom: 35 },
     messageContainer: {
       paddingRight: theme.spacing(10),
       flex: 1,
+      flexDirection: "row",
     },
     textContainer: {
       marginTop: 25,
       display: "flex",
       flexDirection: "row",
     },
-    postButton: { marginRight: 15 },
+    postButton: { marginRight: 15, marginLeft: 5 },
     postText: { flex: 1 },
   })
 );
+
+const MessageComponent = (props) => {
+  const { message, senderId } = props.message;
+  const mine = useProfileSelector((state) => state.profile.id == senderId);
+  return (
+    <Container style={{ textAlign: mine ? "right" : "left" }}>
+      <label>{message}</label>
+    </Container>
+  );
+};
 
 const PrivateChatScreen = () => {
   const { username } = useParams<ParamTypes>();
@@ -62,7 +74,7 @@ const PrivateChatScreen = () => {
   const sendMessage = () => {
     if (value.trim() !== "") {
       const message = {
-        msg: value.trim(),
+        message: value.trim(),
         senderId: myProfile.id,
         receiverId: profile.id,
       };
@@ -93,8 +105,8 @@ const PrivateChatScreen = () => {
   }, []);
 
   const onMessage = (msg, topic) => {
-    console.log("MESAGE RECEIVED");
-    dispatch(messageReceived({ message: msg }));
+    client.sendMessage(`/app/read`, msg.id);
+    dispatch(messageRead({ message: msg }));
   };
 
   if (!profile) {
@@ -111,17 +123,18 @@ const PrivateChatScreen = () => {
 
   return (
     <Container className={styles.container}>
-      <Container>
+      <Container className={styles.headingContainer}>
         <Typography variant="h3">{username}</Typography>
         <Typography variant="h3">{connected}</Typography>
       </Container>
       <Container className={styles.messageContainer}>
         {messages
           .filter(
-            (m) => m.receiverId === profile.id || m.senderId === profile.id
+            (m) => m.senderId == myProfile.id || m.receiverId == myProfile.id
           )
+          .sort((a, b) => +a.id - +b.id)
           .map((m) => {
-            return <label>MESSAGE</label>;
+            return <MessageComponent key={m.id} message={m} />;
           })}
       </Container>
       <Container className={styles.textContainer}>
