@@ -1,11 +1,11 @@
-import { useCoreSelector } from "../storage/app.selectors";
+import { useProfileSelector } from "../storage/app.selectors";
 import HomeNavigator from "./home.navigator";
 import SignInNavigator from "./signin.navigator";
 
 const AppNavigator = () => {
-  const hasToken = useCoreSelector((state) => state.token.length > 0);
+  const hasProfile = useProfileSelector((state) => state?.profile);
 
-  return <div>{hasToken ? <HomeNavigator /> : <SignInNavigator />}</div>;
+  return <div>{hasProfile ? <HomeNavigator /> : <SignInNavigator />}</div>;
 };
 
 export default AppNavigator;

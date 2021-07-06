@@ -1,12 +1,22 @@
 import React from "react";
-import { useSignInSelector } from "../../storage/app.selectors";
+import { useProfileSelector } from "../../storage/app.selectors";
 import LoadingScreen from "../loading.screen";
 import SignInForm from "./signin.form";
 
 const SignInScreen = () => {
-  const { loading } = useSignInSelector((state) => state);
+  const { loginRequestStatus, fetchProfileRequestStatus } = useProfileSelector(
+    (state) => state
+  );
 
-  return <div>{loading ? <LoadingScreen /> : <SignInForm />}</div>;
+  return (
+    <div>
+      {loginRequestStatus.loading || fetchProfileRequestStatus.loading ? (
+        <LoadingScreen />
+      ) : (
+        <SignInForm />
+      )}
+    </div>
+  );
 };
 
 export default SignInScreen;

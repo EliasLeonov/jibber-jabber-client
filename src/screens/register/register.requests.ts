@@ -1,12 +1,10 @@
-const axios = require("axios").default;
+import { post } from "../../utils/HttpClient";
 
-export const register = ({ username, password, mail, name, lastname }) =>
-  axios({
-    method: "post",
-    url: "http://localhost:9000/user/register",
-    haders: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-    },
-    data: { username, password, mail, name, lastname },
+export const register = ({ username, password, mail, firstname, lastname }) =>
+  post("/auth/user/register", {
+    username,
+    password,
+    mail,
+    firstname,
+    lastname,
   });

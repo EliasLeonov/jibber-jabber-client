@@ -1,9 +1,9 @@
 import { Button, Container, makeStyles, TextField } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import Post from "../../models/post";
-import { useAppDispatch, useFeedSelector } from "../../storage/app.selectors";
-import { createPost, fetchPosts } from "../../storage/feed.reducer";
-import PostsList from "./posts.list";
+import React, { useState } from "react";
+import { useAppDispatch, useUsersSelector } from "../../storage/app.selectors";
+import { search } from "../../storage/users.reducer";
+import LoadingScreen from "../loading.screen";
+import UsersList from "./users.list";
 
 const useStyles = makeStyles((theme) => ({
   textContainer: {
@@ -15,20 +15,17 @@ const useStyles = makeStyles((theme) => ({
   postText: { flex: 1 },
 }));
 
-const FeedScreen = () => {
+const UsersScreen = () => {
   const styles = useStyles();
   const [value, setValue] = useState("");
-  const posts: Post[] = useFeedSelector((state) => state.posts);
+  const { loading } = useUsersSelector((state) => state.searchRequestStatus);
+  const users: any[] = useUsersSelector((state) => state.users);
 
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(fetchPosts());
-  }, []);
-
   return (
     <Container>
-      <Container className={styles.textContainer}>
+      <Container>
         <Button
           variant="outlined"
           color="primary"
@@ -37,25 +34,25 @@ const FeedScreen = () => {
             if (value.length == 0) {
               return;
             }
-            await dispatch(createPost({ text: value }));
+            await dispatch(search({ username: value }));
             setValue("");
           }}
         >
-          Post
+          Search
         </Button>
         <TextField
           className={styles.postText}
           multiline
           rowsMax={4}
           value={value}
-          placeholder={"What is on your mind?"}
+          placeholder={"@username"}
           onChange={(e) => setValue(e.target.value)}
           variant="outlined"
         />
       </Container>
-      <PostsList posts={posts} />
+      {loading ? <LoadingScreen /> : <UsersList users={users} />}
     </Container>
   );
 };
 
-export default FeedScreen;
+export default UsersScreen;

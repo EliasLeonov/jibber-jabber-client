@@ -1,7 +1,7 @@
-import { AsyncThunk, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { register } from "../screens/register/register.requests";
 
-export const registerUser: AsyncThunk<any, any, any> = createAsyncThunk(
+export const registerUser = createAsyncThunk(
   "register/registerUser",
   async (payload: any) => {
     const response = await register(payload)
@@ -15,23 +15,33 @@ export const RegisterSlice = createSlice({
   name: "register",
   initialState: {
     loading: false,
-    succes: false,
+    success: false,
     error: false,
   },
-  reducers: {},
+  reducers: {
+    reset: (state) => {
+      state.loading = false;
+      state.success = false;
+      state.error = false;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(registerUser.fulfilled, (state, action) => {
       state.loading = false;
-      state.succes = true;
+      state.success = true;
     });
     builder.addCase(registerUser.pending, (state, action) => {
       state.loading = true;
+      state.success = false;
     });
     builder.addCase(registerUser.rejected, (state, action) => {
       state.loading = false;
+      state.success = false;
       state.error = true;
     });
   },
 });
+
+export const { reset } = RegisterSlice.actions;
 
 export type RegisterState = ReturnType<typeof RegisterSlice.reducer>;

@@ -9,8 +9,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import React, { useState } from "react";
 import { useAppDispatch } from "../../storage/app.selectors";
-import { storeToken } from "../../storage/core.reducer";
-import { signInUser } from "../../storage/signin.reducer";
+import { fetchProfile, loginUser } from "../../storage/profile.reducer";
 
 function Copyright() {
   return (
@@ -44,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SignInForm = () => {
   const classes = useStyles();
-  const [mail, setMail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatch = useAppDispatch();
@@ -62,12 +61,12 @@ const SignInForm = () => {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
             autoFocus
-            onChange={(e) => setMail(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -87,11 +86,10 @@ const SignInForm = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={async () =>
-              await dispatch(signInUser({ mail, password })).then((response) =>
-                dispatch(storeToken(response.payload))
-              )
-            }
+            onClick={async () => {
+              await dispatch(loginUser({ username, password }));
+              await dispatch(fetchProfile());
+            }}
           >
             Sign In
           </Button>

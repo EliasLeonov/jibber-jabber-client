@@ -1,17 +1,11 @@
-import {
-  Container,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  makeStyles,
-} from "@material-ui/core";
+import { Container, Divider, List, makeStyles } from "@material-ui/core";
 import React from "react";
-import { useAppDispatch } from "../../storage/app.selectors";
-import { clearToken } from "../../storage/core.reducer";
-import FeedListItem from "./feed.list.item";
-import MessagesListItem from "./message.list.item";
-import ProfileListItem from "./profile.list.item";
+import { withRouter } from "react-router-dom";
+import ChatsListItem from "../chats/chats.list.item";
+import FeedListItem from "../feed/feed.list.item";
+import ProfileListItem from "../profile/profile.list.item";
+import UsersListItem from "../users/users.list.item";
+import LogOutListItem from "./logout.list.item";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,24 +16,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CustomDrawer = () => {
+const CustomDrawer = ({ history }) => {
   const styles = useStyles();
-  const dispatch = useAppDispatch();
 
   return (
     <Container className={styles.root}>
       <Divider />
       <List>
         <FeedListItem />
-        <MessagesListItem />
+        <UsersListItem />
+        <ChatsListItem />
         <ProfileListItem />
         <Divider />
-        <ListItem button onClick={() => dispatch(clearToken())}>
-          <ListItemText primary={"Logout"} />
-        </ListItem>
+        <LogOutListItem />
       </List>
     </Container>
   );
 };
 
-export default CustomDrawer;
+export default withRouter(CustomDrawer);

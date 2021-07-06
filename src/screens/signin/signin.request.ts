@@ -1,11 +1,4 @@
-const axios = require("axios").default;
+import { post } from "../../utils/HttpClient";
 
-export const signIn = (mail: string, password: string) =>
-  axios({
-    method: "post",
-    url: "http://localhost:9000/user/login",
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-    },
-    data: { mail, password },
-  });
+export const login = (username: string, password: string) =>
+  post("/auth/user/login", { username, password });

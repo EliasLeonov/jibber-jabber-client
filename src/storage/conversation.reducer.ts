@@ -1,51 +1,105 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getAllChats, getChatMessages } from "../screens/chats/chat.requests";
 
-export const fetchAll = createAsyncThunk("conversation/fetchAll", async () => {
-  return [
-    {
-      id: 1,
-      authorId: "123",
-      username: "PabloRocks123",
-      firstName: "Pablo",
-      lastMessage: "Yo when are we leaving?",
-    },
-    {
-      id: 2,
-      authorId: "858585",
-      username: "BigManlo",
-      firstName: "Biggie",
-      lastMessage: "BTC is going to the moon, you know it, i know it.",
-    },
-  ];
-});
+export const fetchAllChats = createAsyncThunk(
+  "chats/fetchAllChats",
+  async (payload: any) => {
+    const chats = await getAllChats(payload.userId)
+      .then((res) => res.data)
+      .catch((err) => console.log(err));
+    if (chats) {
+      return { chats };
+    }
+    return { chats: [] };
+  }
+);
+
+export const fetchMessages = createAsyncThunk(
+  "chats/fetchMessages",
+  async (payload: any) => {
+    const messages = await getChatMessages(payload.userId, payload.recipientId)
+      .then((res) => res.data)
+      .catch((err) => console.log(err));
+    if (messages) {
+      return { messages };
+    }
+    return { messages: [] };
+  }
+);
 
 export const ConversationSlice = createSlice({
-  name: "conversation",
+  name: "chats",
   initialState: {
-    conversations: [],
-    conversationsRequestStatus: {
+    chats: [],
+    messages: [],
+    fetchMessagesRequestStatus: {
       loading: false,
-      loadingSuccess: true,
+      success: true,
       error: false,
     },
+    fetchChatsRequestStatus: {
+      loading: false,
+      success: true,
+      error: false,
+    },
+    connected: false,
   },
-  reducers: {},
+  reducers: {
+    setConnected: (state, action) => {
+      state.connected = action.payload.connected;
+    },
+    messageReceived: (state, action) => {
+      if (action.payload.message) {
+        if (
+          !state.messages.includes((m) => m.id === action.payload.message.id)
+        ) {
+          state.messages.push(action.payload.message);
+        }
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAll.fulfilled, (state, action) => {
-        state.conversations = action.payload;
-        state.conversationsRequestStatus.loading = false;
-        state.conversationsRequestStatus.loadingSuccess = true;
+      .addCase(fetchMessages.fulfilled, (state, action) => {
+        state.fetchMessagesRequestStatus.loading = false;
+        state.fetchMessagesRequestStatus.success = true;
+        state.fetchMessagesRequestStatus.error = false;
+
+        if (action.payload.messages.length > 0) {
+          state.messages.push(...action.payload.messages);
+        }
       })
-      .addCase(fetchAll.pending, (state, action) => {
-        state.conversationsRequestStatus.loading = true;
+      .addCase(fetchMessages.pending, (state, action) => {
+        state.fetchMessagesRequestStatus.loading = true;
       })
-      .addCase(fetchAll.rejected, (state, action) => {
-        state.conversationsRequestStatus.loading = false;
-        state.conversationsRequestStatus.loadingSuccess = true;
-        state.conversationsRequestStatus.error = true;
+      .addCase(fetchMessages.rejected, (state, action) => {
+        state.fetchMessagesRequestStatus.loading = false;
+        state.fetchMessagesRequestStatus.success = true;
+        state.fetchMessagesRequestStatus.error = true;
+      });
+
+    builder
+      .addCase(fetchAllChats.fulfilled, (state, action) => {
+        state.fetchChatsRequestStatus.loading = false;
+        state.fetchChatsRequestStatus.success = true;
+        state.fetchChatsRequestStatus.error = false;
+
+        console.log(action.payload);
+        if (action.payload.chats.length > 0) {
+          state.chats = action.payload.chats;
+        }
+      })
+      .addCase(fetchAllChats.pending, (state, action) => {
+        state.fetchChatsRequestStatus.loading = true;
+      })
+      .addCase(fetchAllChats.rejected, (state, action) => {
+        state.fetchChatsRequestStatus.loading = false;
+        state.fetchChatsRequestStatus.success = true;
+        state.fetchChatsRequestStatus.error = true;
       });
   },
 });
+
+export const { setConnected, messageReceived } = ConversationSlice.actions;
 
 export type ConversationState = ReturnType<typeof ConversationSlice.reducer>;
