@@ -88,7 +88,8 @@ const ChatsScreen = ({ history }) => {
           <Conversation
             key={conv.id}
             username={conv.receiver.username}
-            firstName={conv.receiver.firstName}
+            firstname={conv.receiver.firstname}
+            receiverId={conv.receiverId}
           />
         ))}
     </Container>

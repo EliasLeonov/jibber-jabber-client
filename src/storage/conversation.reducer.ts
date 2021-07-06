@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { uniqBy } from "lodash";
 import { getAllChats, getChatMessages } from "../screens/chats/chat.requests";
 
 export const fetchAllChats = createAsyncThunk(
@@ -50,11 +51,10 @@ export const ConversationSlice = createSlice({
     },
     messageReceived: (state, action) => {
       if (action.payload.message) {
-        if (
-          !state.messages.includes((m) => m.id === action.payload.message.id)
-        ) {
-          state.messages.push(action.payload.message);
-        }
+        state.messages = uniqBy(
+          [...state.messages, action.payload.message],
+          "id"
+        );
       }
     },
     messageRead: (state, action) => {
@@ -94,7 +94,10 @@ export const ConversationSlice = createSlice({
 
         console.log(action.payload);
         if (action.payload.chats.length > 0) {
-          state.chats = action.payload.chats;
+          state.chats = uniqBy(
+            [...state.chats, ...action.payload.chats],
+            "chatId"
+          );
         }
       })
       .addCase(fetchAllChats.pending, (state, action) => {

@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { uniqBy } from "lodash";
 import { getUser, searchUsers } from "../screens/users/users.request";
 
 export const search = createAsyncThunk("users/search", async (payload: any) => {
@@ -12,10 +13,14 @@ export const search = createAsyncThunk("users/search", async (payload: any) => {
 export const getAllChatUsers = createAsyncThunk(
   "users/getAllChatUsers",
   async (payload: any) => {
-    const requests = payload.chats
-      .map((c) => c.receiverId)
-      .map((id) => getUser(id));
-    const users = await Promise.all(requests);
+    const users = await Promise.all(
+      payload.chats
+        .map((c) => c.receiverId)
+        .map(async (id) => {
+          let response = await getUser(id);
+          return response.data;
+        })
+    );
     return users;
   }
 );
@@ -53,7 +58,7 @@ export const UsersSlice = createSlice({
       .addCase(search.fulfilled, (state, action) => {
         state.searchRequestStatus.loading = false;
         state.searchRequestStatus.success = true;
-        state.users.push(...action.payload);
+        state.users = uniqBy([...state.users, ...action.payload], "id");
       })
       .addCase(search.pending, (state, action) => {
         state.searchRequestStatus.loading = true;
@@ -69,8 +74,7 @@ export const UsersSlice = createSlice({
         state.getChatUsersRequestStatus.loading = false;
         state.getChatUsersRequestStatus.success = true;
         console.log(action.payload);
-        //@ts-ignore
-        //state.users.push(...action.payload.users);
+        state.users = uniqBy([...state.users, ...action.payload], "id");
       })
       .addCase(getAllChatUsers.pending, (state, action) => {
         state.getChatUsersRequestStatus.loading = true;

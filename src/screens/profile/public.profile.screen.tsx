@@ -66,7 +66,7 @@ const PublicProfileScreen = () => {
     }
 
     fetchProfile();
-  }, []);
+  }, [isFollowing]);
 
   if (!profile) {
     return <LoadingScreen />;

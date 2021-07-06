@@ -25,7 +25,6 @@ module.exports = function (app) {
     createProxyMiddleware({
       target: "http://localhost:9002",
       changeOrigin: true,
-        pathRewrite: {'^/chat-api' : ''}
     })
   );
 };
