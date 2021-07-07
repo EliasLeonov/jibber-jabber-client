@@ -13,6 +13,7 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import React from "react";
 import {
   useAppDispatch,
+  useFeedSelector,
   useProfileSelector,
 } from "../../storage/app.selectors";
 import {
@@ -30,6 +31,9 @@ const moment = require("moment");
 const PostComponent = (props) => {
   const profile = useProfileSelector((state) => state.profile);
   const isLoggedIn = useProfileSelector((state) => state.profile != undefined);
+  const isLiked = useFeedSelector(
+    (state) => state.posts.find((p) => p.id === props.id).isLiked
+  );
   const styles = useStyles();
   const dispatch = useAppDispatch();
 
@@ -37,7 +41,7 @@ const PostComponent = (props) => {
 
   const handleLike = async () => {
     if (!isAuthor) {
-      if (props.isLiked) {
+      if (isLiked) {
         await dispatch(unLikeUserPost({ postId: props.id }));
       } else {
         await dispatch(likeUserPost({ userId: profile.id, postId: props.id }));
@@ -72,7 +76,7 @@ const PostComponent = (props) => {
               <IconButton aria-label="add to favorites">
                 <FavoriteIcon
                   onClick={async () => await handleLike()}
-                  style={{ fill: props.isLiked ? "red" : null }}
+                  style={{ fill: isLiked ? "red" : null }}
                 />
               </IconButton>
             )}

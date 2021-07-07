@@ -1,6 +1,6 @@
 import { Container } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-import React from "react";
+import React, { useEffect } from "react";
 import { Switch } from "react-router";
 import { Redirect, Route } from "react-router-dom";
 import SocketJsClient from "react-stomp";
@@ -12,7 +12,11 @@ import ProfileEditScreen from "../screens/profile/profile.edit.screen";
 import ProfileScreen from "../screens/profile/profile.screen";
 import UsersScreen from "../screens/users/users.screen";
 import { useAppDispatch, useProfileSelector } from "../storage/app.selectors";
-import { messageReceived, setConnected } from "../storage/conversation.reducer";
+import {
+  fetchAllChats,
+  messageReceived,
+  setConnected,
+} from "../storage/conversation.reducer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,14 +25,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const protocol = process.env.HTTPS_PROTOCOL ? "https" : "http";
+
 const HomeNavigator = () => {
   const styles = useStyles();
   const dispatch = useAppDispatch();
   const profile = useProfileSelector((state) => state.profile);
 
-  const onMessage = (msg, topic) => {
-    dispatch(messageReceived({ message: msg }));
+  const onMessage = (notif, topic) => {
+    dispatch(messageReceived({ notification: notif }));
   };
+
+  useEffect(() => {
+    async function fetchChats() {
+      await dispatch(fetchAllChats({ userId: profile.id }));
+    }
+
+    fetchChats();
+  }, []);
 
   return (
     <Container className={styles.root}>
@@ -52,11 +66,11 @@ const HomeNavigator = () => {
       </Container>
       {profile && (
         <SocketJsClient
-          url={"http://localhost:9002/ws"}
+          url={`${protocol}://localhost:9002/ws `}
           topics={[`/user/${profile.id}/queue/messages`]}
-          onConnect={() => dispatch(setConnected(true))}
-          onDisconnect={() => dispatch(setConnected(false))}
-          onConnectFailure={() => dispatch(setConnected(false))}
+          onConnect={() => dispatch(setConnected({ connected: true }))}
+          onDisconnect={() => dispatch(setConnected({ connected: false }))}
+          onConnectFailure={() => dispatch(setConnected({ connected: false }))}
           onMessage={onMessage}
           debug={true}
         />

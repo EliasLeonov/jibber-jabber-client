@@ -50,7 +50,7 @@ const rootReducer = combineReducers({
   register: RegisterSlice.reducer,
   core: CoreSlice.reducer,
   feed: FeedSlice.reducer,
-  conversation: ConversationSlice.reducer,
+  conversation: persistReducer(chatConfig, ConversationSlice.reducer),
   profile: persistReducer(profileConfig, ProfileSlice.reducer),
   users: UsersSlice.reducer,
 });

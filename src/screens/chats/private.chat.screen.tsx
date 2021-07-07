@@ -17,7 +17,7 @@ import {
 } from "../../storage/app.selectors";
 import {
   fetchMessages,
-  messageReceived,
+  markChatAsRead,
   setConnected,
 } from "../../storage/conversation.reducer";
 import LoadingScreen from "../loading.screen";
@@ -27,24 +27,43 @@ interface ParamTypes {
   username: string;
 }
 
+const protocol = process.env.HTTPS_PROTOCOL ? "https" : "http";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       flex: 1,
     },
+    headingContainer: { marginBottom: 35 },
     messageContainer: {
       paddingRight: theme.spacing(10),
       flex: 1,
+      flexDirection: "row",
     },
     textContainer: {
       marginTop: 25,
       display: "flex",
       flexDirection: "row",
     },
-    postButton: { marginRight: 15 },
+    postButton: { marginRight: 15, marginLeft: 5 },
     postText: { flex: 1 },
   })
 );
+
+const MessageComponent = (props) => {
+  const { message, senderId } = props.message;
+  const mine = useProfileSelector((state) => state.profile.id == senderId);
+  return (
+    <Container
+      style={{
+        textAlign: mine ? "right" : "left",
+        backgroundColor: mine ? "lightgrey" : "white",
+      }}
+    >
+      <label>{message}</label>
+    </Container>
+  );
+};
 
 const PrivateChatScreen = () => {
   const { username } = useParams<ParamTypes>();
@@ -62,7 +81,7 @@ const PrivateChatScreen = () => {
   const sendMessage = () => {
     if (value.trim() !== "") {
       const message = {
-        msg: value.trim(),
+        message: value.trim(),
         senderId: myProfile.id,
         receiverId: profile.id,
       };
@@ -92,9 +111,21 @@ const PrivateChatScreen = () => {
     fetchProfile();
   }, []);
 
-  const onMessage = (msg, topic) => {
-    console.log("MESAGE RECEIVED");
-    dispatch(messageReceived({ message: msg }));
+  const onMessage = (notification, topic) => {
+    if (
+      notification.chat.senderId == profile.id ||
+      notification.chat.receiverId == profile.id
+    ) {
+      console.log("mark chat as read");
+      client.sendMessage(
+        `/app/read`,
+        JSON.stringify({
+          chatId: notification.chat.chatId,
+          receiverId: myProfile.id,
+        })
+      );
+      dispatch(markChatAsRead({ chatId: notification.chat.chatId }));
+    }
   };
 
   if (!profile) {
@@ -111,17 +142,20 @@ const PrivateChatScreen = () => {
 
   return (
     <Container className={styles.container}>
-      <Container>
-        <Typography variant="h3">{username}</Typography>
+      <Container className={styles.headingContainer}>
+        <Typography variant="h3">Chatting with {username}</Typography>
         <Typography variant="h3">{connected}</Typography>
       </Container>
       <Container className={styles.messageContainer}>
         {messages
           .filter(
-            (m) => m.receiverId === profile.id || m.senderId === profile.id
+            (m) =>
+              (m.senderId == myProfile.id && m.receiverId == profile.id) ||
+              (m.senderId == profile.id && m.receiverId == myProfile.id)
           )
+          .sort((a, b) => +a.id - +b.id)
           .map((m) => {
-            return <label>MESSAGE</label>;
+            return <MessageComponent key={m.id} message={m} />;
           })}
       </Container>
       <Container className={styles.textContainer}>
@@ -145,16 +179,16 @@ const PrivateChatScreen = () => {
       </Container>
       {profile && myProfile && (
         <SocketJsClient
-          url={"http://localhost:9002/ws"}
+          url={`${protocol}://localhost:9002/ws `}
           topics={[`/user/${myProfile.id}/queue/messages`]}
           ref={(c) => {
             client = c;
           }}
           onConnect={() => {
-            dispatch(setConnected(true));
+            dispatch(setConnected({ connected: true }));
           }}
-          onDisconnect={() => dispatch(setConnected(false))}
-          onConnectFailure={() => dispatch(setConnected(false))}
+          onDisconnect={() => dispatch(setConnected({ connected: false }))}
+          onConnectFailure={() => dispatch(setConnected({ connected: false }))}
           onMessage={onMessage}
           debug={true}
         />

@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { uniqBy } from "lodash";
 import { getAllChats, getChatMessages } from "../screens/chats/chat.requests";
 
 export const fetchAllChats = createAsyncThunk(
@@ -34,28 +35,85 @@ export const ConversationSlice = createSlice({
     messages: [],
     fetchMessagesRequestStatus: {
       loading: false,
-      success: true,
+      success: false,
       error: false,
     },
     fetchChatsRequestStatus: {
       loading: false,
-      success: true,
+      success: false,
       error: false,
     },
     connected: false,
   },
   reducers: {
+    clearConversations: (state) => {
+      state.fetchChatsRequestStatus.loading = false;
+      state.fetchChatsRequestStatus.error = false;
+      state.fetchChatsRequestStatus.success = false;
+
+      state.fetchMessagesRequestStatus.loading = false;
+      state.fetchMessagesRequestStatus.error = false;
+      state.fetchMessagesRequestStatus.success = false;
+
+      state.connected = false;
+      state.chats = [];
+      state.messages = [];
+    },
     setConnected: (state, action) => {
       state.connected = action.payload.connected;
     },
     messageReceived: (state, action) => {
-      if (action.payload.message) {
-        if (
-          !state.messages.includes((m) => m.id === action.payload.message.id)
-        ) {
-          state.messages.push(action.payload.message);
+      console.log("Message received.");
+      if (action.payload.notification) {
+        console.log(action.payload.notification);
+        state.messages = uniqBy(
+          [...state.messages, action.payload.notification.message],
+          "id"
+        );
+
+        const chatIndex = state.chats.findIndex(
+          (c) => c.chatId == action.payload.notification.chat.chatId
+        );
+
+        if (chatIndex > -1) {
+          console.log(
+            `replace with ${JSON.stringify(action.payload.notification.chat)}`
+          );
+          state.chats[chatIndex] = action.payload.notification.chat;
+        } else {
+          console.log("not found");
+          state.chats = uniqBy(
+            [...state.chats, action.payload.notification.chat],
+            "chatId"
+          );
         }
+
+        console.log(state.messages);
+        console.log(state.chats[chatIndex]);
       }
+    },
+    messageRead: (state, action) => {
+      state.messages = state.messages.map((m) => {
+        if (m.id === action.payload.message.id) {
+          return { ...m, status: "READ" };
+        }
+        return m;
+      });
+    },
+    markChatAsRead: (state, action) => {
+      state.messages = state.messages.map((m) => {
+        if (m.chatId === action.payload.chatId) {
+          return { ...m, status: "READ" };
+        }
+        return m;
+      });
+
+      state.chats = state.chats.map((c) => {
+        if (c.chatId === action.payload.chatId) {
+          return { ...c, unreadCount: 0 };
+        }
+        return c;
+      });
     },
   },
   extraReducers: (builder) => {
@@ -66,7 +124,10 @@ export const ConversationSlice = createSlice({
         state.fetchMessagesRequestStatus.error = false;
 
         if (action.payload.messages.length > 0) {
-          state.messages.push(...action.payload.messages);
+          state.messages = uniqBy(
+            [...state.messages, ...action.payload.messages],
+            "id"
+          );
         }
       })
       .addCase(fetchMessages.pending, (state, action) => {
@@ -84,9 +145,12 @@ export const ConversationSlice = createSlice({
         state.fetchChatsRequestStatus.success = true;
         state.fetchChatsRequestStatus.error = false;
 
-        console.log(action.payload);
         if (action.payload.chats.length > 0) {
-          state.chats = action.payload.chats;
+          state.chats = uniqBy(
+            [...state.chats, ...action.payload.chats],
+            "chatId"
+          );
+          console.log(state.chats);
         }
       })
       .addCase(fetchAllChats.pending, (state, action) => {
@@ -100,6 +164,12 @@ export const ConversationSlice = createSlice({
   },
 });
 
-export const { setConnected, messageReceived } = ConversationSlice.actions;
+export const {
+  setConnected,
+  messageReceived,
+  messageRead,
+  clearConversations,
+  markChatAsRead,
+} = ConversationSlice.actions;
 
 export type ConversationState = ReturnType<typeof ConversationSlice.reducer>;
