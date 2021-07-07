@@ -4,7 +4,7 @@ const protocol = process.env.HTTPS_PROTOCOL ? "https" : "https";
 
 //axios.defaults.withCredentials = true;
 const client = axios.create({
-  baseURL: `${protocol}://${process.env.URL}:443`,
+  baseURL: `${protocol}://${process.env.URL}`,
 });
 
 //axios.get('some api url', {withCredentials: true});
