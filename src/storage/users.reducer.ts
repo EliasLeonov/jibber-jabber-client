@@ -73,7 +73,6 @@ export const UsersSlice = createSlice({
       .addCase(getAllChatUsers.fulfilled, (state, action) => {
         state.getChatUsersRequestStatus.loading = false;
         state.getChatUsersRequestStatus.success = true;
-        console.log(action.payload);
         state.users = uniqBy([...state.users, ...action.payload], "id");
       })
       .addCase(getAllChatUsers.pending, (state, action) => {

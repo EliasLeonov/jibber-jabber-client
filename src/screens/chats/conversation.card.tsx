@@ -8,6 +8,12 @@ const useStyles = makeStyles((theme) => ({
 
 const Conversation = (props) => {
   const styles = useStyles();
+
+  const title =
+    props.unreadCount > 0
+      ? `(${props.unreadCount}) ${props.firstname}`
+      : `${props.firstname}`;
+
   return (
     <Container
       className={styles.root}
@@ -15,7 +21,7 @@ const Conversation = (props) => {
     >
       <Card>
         <CardHeader
-          title={props.firstname}
+          title={title}
           subheader={`@${props.username}`}
           color="textPrimary"
         />

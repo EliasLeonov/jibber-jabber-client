@@ -26,8 +26,8 @@ const HomeNavigator = () => {
   const dispatch = useAppDispatch();
   const profile = useProfileSelector((state) => state.profile);
 
-  const onMessage = (msg, topic) => {
-    dispatch(messageReceived({ message: msg }));
+  const onMessage = (notif, topic) => {
+    dispatch(messageReceived({ notification: notif }));
   };
 
   return (

@@ -35,26 +35,49 @@ export const ConversationSlice = createSlice({
     messages: [],
     fetchMessagesRequestStatus: {
       loading: false,
-      success: true,
+      success: false,
       error: false,
     },
     fetchChatsRequestStatus: {
       loading: false,
-      success: true,
+      success: false,
       error: false,
     },
     connected: false,
   },
   reducers: {
+    clearConversations: (state) => {
+      state.fetchChatsRequestStatus.loading = false;
+      state.fetchChatsRequestStatus.error = false;
+      state.fetchChatsRequestStatus.success = false;
+
+      state.fetchMessagesRequestStatus.loading = false;
+      state.fetchMessagesRequestStatus.error = false;
+      state.fetchMessagesRequestStatus.success = false;
+
+      state.connected = false;
+      state.chats = [];
+      state.messages = [];
+    },
     setConnected: (state, action) => {
       state.connected = action.payload.connected;
     },
     messageReceived: (state, action) => {
-      if (action.payload.message) {
+      if (action.payload.notification) {
         state.messages = uniqBy(
-          [...state.messages, action.payload.message],
+          [...state.messages, action.payload.notification.message],
           "id"
         );
+
+        state.chats = state.chats.map((c) => {
+          if (c.chatId === action.payload.notification.message.chatId) {
+            return {
+              ...c,
+              unreadCount: action.payload.notification.unreadCount,
+            };
+          }
+          return c;
+        });
       }
     },
     messageRead: (state, action) => {
@@ -63,6 +86,21 @@ export const ConversationSlice = createSlice({
           return { ...m, status: "READ" };
         }
         return m;
+      });
+    },
+    markChatAsRead: (state, action) => {
+      state.messages = state.messages.map((m) => {
+        if (m.chatId === action.payload.chatId) {
+          return { ...m, status: "READ" };
+        }
+        return m;
+      });
+
+      state.chats = state.chats.map((c) => {
+        if (c.chatId === action.payload.chatId) {
+          return { ...c, unreadCount: 0 };
+        }
+        return c;
       });
     },
   },
@@ -74,7 +112,10 @@ export const ConversationSlice = createSlice({
         state.fetchMessagesRequestStatus.error = false;
 
         if (action.payload.messages.length > 0) {
-          state.messages.push(...action.payload.messages);
+          state.messages = uniqBy(
+            [...state.messages, ...action.payload.messages],
+            "id"
+          );
         }
       })
       .addCase(fetchMessages.pending, (state, action) => {
@@ -92,7 +133,6 @@ export const ConversationSlice = createSlice({
         state.fetchChatsRequestStatus.success = true;
         state.fetchChatsRequestStatus.error = false;
 
-        console.log(action.payload);
         if (action.payload.chats.length > 0) {
           state.chats = uniqBy(
             [...state.chats, ...action.payload.chats],
@@ -111,7 +151,12 @@ export const ConversationSlice = createSlice({
   },
 });
 
-export const { setConnected, messageReceived, messageRead } =
-  ConversationSlice.actions;
+export const {
+  setConnected,
+  messageReceived,
+  messageRead,
+  clearConversations,
+  markChatAsRead,
+} = ConversationSlice.actions;
 
 export type ConversationState = ReturnType<typeof ConversationSlice.reducer>;

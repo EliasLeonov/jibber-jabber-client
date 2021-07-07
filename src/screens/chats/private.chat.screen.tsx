@@ -17,7 +17,7 @@ import {
 } from "../../storage/app.selectors";
 import {
   fetchMessages,
-  messageRead,
+  markChatAsRead,
   setConnected,
 } from "../../storage/conversation.reducer";
 import LoadingScreen from "../loading.screen";
@@ -107,11 +107,19 @@ const PrivateChatScreen = () => {
     }
 
     fetchProfile();
+    if (messages.length > 0) {
+      dispatch(markChatAsRead({ chatId: messages[0].chatId }));
+    }
   }, []);
 
-  const onMessage = (msg, topic) => {
-    client.sendMessage(`/app/read`, msg.id);
-    dispatch(messageRead({ message: msg }));
+  const onMessage = (notification, topic) => {
+    if (notification.message.receiverId == myProfile.id) {
+      client.sendMessage(`/app/read`, {
+        chatId: notification.message.chatId,
+        receiverId: notification.message.receiverId,
+      });
+      dispatch(markChatAsRead({ chatId: notification.message.chatId }));
+    }
   };
 
   if (!profile) {

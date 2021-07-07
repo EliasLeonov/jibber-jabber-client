@@ -2,6 +2,7 @@ import { ListItem, ListItemText } from "@material-ui/core";
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { useAppDispatch } from "../../storage/app.selectors";
+import { clearConversations } from "../../storage/conversation.reducer";
 import { clearFeed } from "../../storage/feed.reducer";
 import { clearProfile } from "../../storage/profile.reducer";
 import { clearUsers } from "../../storage/users.reducer";
@@ -19,6 +20,7 @@ const LogOutListItem = ({ history }) => {
         dispatch(clearProfile());
         dispatch(clearUsers());
         dispatch(clearFeed());
+        dispatch(clearConversations());
         history.push(`/signin`);
       }}
     >

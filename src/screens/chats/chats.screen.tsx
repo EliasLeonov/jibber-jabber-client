@@ -57,6 +57,8 @@ const ChatsScreen = ({ history }) => {
     fetchRecipients();
   }, [chats]);
 
+  console.log(chats);
+
   return (
     <Container>
       <Container>
@@ -90,6 +92,7 @@ const ChatsScreen = ({ history }) => {
             username={conv.receiver.username}
             firstname={conv.receiver.firstname}
             receiverId={conv.receiverId}
+            unreadCount={conv.unreadCount}
           />
         ))}
     </Container>
