@@ -204,7 +204,7 @@ export const FeedSlice = createSlice({
         state.postUnLikeRequestStatus.success = true;
         state.postUnLikeRequestStatus.loading = false;
         state.postUnLikeRequestStatus.error = false;
-        if (action.payload.unliked) {
+        if (action.payload) {
           state.posts = state.posts.map((p) => {
             if (p.id === action.payload.postId) {
               p.isLiked = false;
