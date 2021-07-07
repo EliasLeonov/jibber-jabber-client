@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const protocol = process.env.HTTPS_PROTOCOL ? "https" : "http";
+const protocol = process.env.HTTPS_PROTOCOL ? "https" : "https";
 
 const HomeNavigator = () => {
   const styles = useStyles();
@@ -66,7 +66,7 @@ const HomeNavigator = () => {
       </Container>
       {profile && (
         <SocketJsClient
-          url={`${protocol}://localhost:9002/ws `}
+          url={`${protocol}://localhost:443/ws `}
           topics={[`/user/${profile.id}/queue/messages`]}
           onConnect={() => dispatch(setConnected({ connected: true }))}
           onDisconnect={() => dispatch(setConnected({ connected: false }))}

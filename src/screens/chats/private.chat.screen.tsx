@@ -27,7 +27,7 @@ interface ParamTypes {
   username: string;
 }
 
-const protocol = process.env.HTTPS_PROTOCOL ? "https" : "http";
+const protocol = process.env.HTTPS_PROTOCOL ? "https" : "https";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -179,7 +179,7 @@ const PrivateChatScreen = () => {
       </Container>
       {profile && myProfile && (
         <SocketJsClient
-          url={`${protocol}://localhost:9002/ws `}
+          url={`${protocol}://localhost:443/ws `}
           topics={[`/user/${myProfile.id}/queue/messages`]}
           ref={(c) => {
             client = c;

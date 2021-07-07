@@ -1,13 +1,13 @@
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
 
-const protocol = process.env.HTTPS_PROTOCOL ? "https" : "http";
+const protocol = process.env.HTTPS_PROTOCOL ? "https" : "https";
 
 module.exports = function (app) {
   app.use(
     "/api",
     createProxyMiddleware({
-      target: `${protocol}://localhost:9001`,
+      target: `${protocol}://localhost:443`,
       changeOrigin: true,
       pathRewrite: {'^/api' : ''}
     })
@@ -17,7 +17,7 @@ module.exports = function (app) {
   app.use(
     "/auth",
     createProxyMiddleware({
-      target: `${protocol}://localhost:9000`,
+      target: `${protocol}://localhost:443`,
       changeOrigin: true,
         pathRewrite: {'^/auth' : ''}
     })
@@ -26,7 +26,7 @@ module.exports = function (app) {
   app.use(
     "/chat-api",
     createProxyMiddleware({
-      target: `${protocol}://localhost:9002`,
+      target: `${protocol}://localhost:443`,
       changeOrigin: true,
     })
   );
