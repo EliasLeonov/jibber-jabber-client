@@ -107,19 +107,18 @@ const PrivateChatScreen = () => {
     }
 
     fetchProfile();
-    if (messages.length > 0) {
-      dispatch(markChatAsRead({ chatId: messages[0].chatId }));
-    }
   }, []);
 
   const onMessage = (notification, topic) => {
-    if (notification.message.receiverId == myProfile.id) {
-      client.sendMessage(`/app/read`, {
-        chatId: notification.message.chatId,
-        receiverId: notification.message.receiverId,
-      });
-      dispatch(markChatAsRead({ chatId: notification.message.chatId }));
-    }
+    console.log("mark chat as read");
+    client.sendMessage(
+      `/app/read`,
+      JSON.stringify({
+        chatId: notification.chat.chatId,
+        receiverId: myProfile.id,
+      })
+    );
+    dispatch(markChatAsRead({ chatId: notification.chat.chatId }));
   };
 
   if (!profile) {

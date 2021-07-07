@@ -63,21 +63,33 @@ export const ConversationSlice = createSlice({
       state.connected = action.payload.connected;
     },
     messageReceived: (state, action) => {
+      console.log("Message received.");
       if (action.payload.notification) {
+        console.log(action.payload.notification);
         state.messages = uniqBy(
           [...state.messages, action.payload.notification.message],
           "id"
         );
 
-        state.chats = state.chats.map((c) => {
-          if (c.chatId === action.payload.notification.message.chatId) {
-            return {
-              ...c,
-              unreadCount: action.payload.notification.unreadCount,
-            };
-          }
-          return c;
-        });
+        const chatIndex = state.chats.findIndex(
+          (c) => c.chatId == action.payload.notification.chat.chatId
+        );
+
+        if (chatIndex > -1) {
+          console.log(
+            `replace with ${JSON.stringify(action.payload.notification.chat)}`
+          );
+          state.chats[chatIndex] = action.payload.notification.chat;
+        } else {
+          console.log("not found");
+          state.chats = uniqBy(
+            [...state.chats, action.payload.notification.chat],
+            "chatId"
+          );
+        }
+
+        console.log(state.messages);
+        console.log(state.chats[chatIndex]);
       }
     },
     messageRead: (state, action) => {
@@ -138,6 +150,7 @@ export const ConversationSlice = createSlice({
             [...state.chats, ...action.payload.chats],
             "chatId"
           );
+          console.log(state.chats);
         }
       })
       .addCase(fetchAllChats.pending, (state, action) => {

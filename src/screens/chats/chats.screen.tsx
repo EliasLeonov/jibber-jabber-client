@@ -57,8 +57,6 @@ const ChatsScreen = ({ history }) => {
     fetchRecipients();
   }, [chats]);
 
-  console.log(chats);
-
   return (
     <Container>
       <Container>
