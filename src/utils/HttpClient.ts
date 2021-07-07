@@ -1,7 +1,9 @@
 import axios from "axios";
 
+const protocol = process.env.HTTPS_PROTOCOL ? "https" : "http";
+
 //axios.defaults.withCredentials = true;
-const client = axios.create({ baseURL: "http://localhost:3000" });
+const client = axios.create({ baseURL: `${protocol}://localhost:3000` });
 
 //axios.get('some api url', {withCredentials: true});
 export const get = async (url: string, args?: any) => {

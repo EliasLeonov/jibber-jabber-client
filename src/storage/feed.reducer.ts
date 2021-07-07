@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { uniqBy } from "lodash";
 import Post from "../models/post";
 import {
   createNewPost,
@@ -127,10 +128,13 @@ export const FeedSlice = createSlice({
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.fetchPostsRequestStatus.loading = false;
         state.fetchPostsRequestStatus.success = true;
-        state.posts = action.payload.sort((a, b) => {
-          //@ts-ignore
-          return new Date(b.timestamp) - new Date(a.timestamp);
-        });
+        state.posts = uniqBy(
+          action.payload.sort((a, b) => {
+            //@ts-ignore
+            return new Date(b.timestamp) - new Date(a.timestamp);
+          }),
+          "id"
+        );
       })
       .addCase(fetchPosts.pending, (state, action) => {
         state.fetchPostsRequestStatus.loading = true;
@@ -200,7 +204,7 @@ export const FeedSlice = createSlice({
         state.postUnLikeRequestStatus.success = true;
         state.postUnLikeRequestStatus.loading = false;
         state.postUnLikeRequestStatus.error = false;
-        if (action.payload.unliked) {
+        if (action.payload) {
           state.posts = state.posts.map((p) => {
             if (p.id === action.payload.postId) {
               p.isLiked = false;

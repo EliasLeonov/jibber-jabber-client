@@ -74,7 +74,7 @@ const ChatsScreen = ({ history }) => {
           color="primary"
           className={styles.postButton}
           onClick={() => {
-            if (value.trim() !== "") {
+            if (value.trim() !== "" && value.trim() != profile.username) {
               history.push(`/chat/${value.trim()}`);
             }
           }}
@@ -88,7 +88,9 @@ const ChatsScreen = ({ history }) => {
           <Conversation
             key={conv.id}
             username={conv.receiver.username}
-            firstName={conv.receiver.firstName}
+            firstname={conv.receiver.firstname}
+            receiverId={conv.receiverId}
+            unreadCount={conv.unreadCount}
           />
         ))}
     </Container>
