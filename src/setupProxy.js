@@ -7,7 +7,7 @@ module.exports = function (app) {
   app.use(
     "/api",
     createProxyMiddleware({
-      target: `${protocol}://localhost:443`,
+      target: `${protocol}://${process.env.URL}:443`,
       changeOrigin: true,
       pathRewrite: {'^/api' : ''}
     })
@@ -17,7 +17,7 @@ module.exports = function (app) {
   app.use(
     "/auth",
     createProxyMiddleware({
-      target: `${protocol}://localhost:443`,
+      target: `${protocol}://${process.env.URL}:443`,
       changeOrigin: true,
         pathRewrite: {'^/auth' : ''}
     })
@@ -26,7 +26,7 @@ module.exports = function (app) {
   app.use(
     "/chat-api",
     createProxyMiddleware({
-      target: `${protocol}://localhost:443`,
+      target: `${protocol}://${process.env.URL}:443`,
       changeOrigin: true,
     })
   );
