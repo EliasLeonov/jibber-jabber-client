@@ -7,6 +7,9 @@ WORKDIR /app
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
 
+
+ENV REACT_APP_URL devjibjabingsis.ddns.net
+
 # install app dependencies
 COPY package.json ./
 COPY package-lock.json ./
