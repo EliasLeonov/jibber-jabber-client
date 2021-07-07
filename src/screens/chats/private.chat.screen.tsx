@@ -27,6 +27,8 @@ interface ParamTypes {
   username: string;
 }
 
+const protocol = process.env.HTTPS_PROTOCOL ? "https" : "http";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
@@ -110,15 +112,20 @@ const PrivateChatScreen = () => {
   }, []);
 
   const onMessage = (notification, topic) => {
-    console.log("mark chat as read");
-    client.sendMessage(
-      `/app/read`,
-      JSON.stringify({
-        chatId: notification.chat.chatId,
-        receiverId: myProfile.id,
-      })
-    );
-    dispatch(markChatAsRead({ chatId: notification.chat.chatId }));
+    if (
+      notification.chat.senderId == profile.id ||
+      notification.chat.receiverId == profile.id
+    ) {
+      console.log("mark chat as read");
+      client.sendMessage(
+        `/app/read`,
+        JSON.stringify({
+          chatId: notification.chat.chatId,
+          receiverId: myProfile.id,
+        })
+      );
+      dispatch(markChatAsRead({ chatId: notification.chat.chatId }));
+    }
   };
 
   if (!profile) {
@@ -172,7 +179,7 @@ const PrivateChatScreen = () => {
       </Container>
       {profile && myProfile && (
         <SocketJsClient
-          url={"http://localhost:9002/ws"}
+          url={`${protocol}://localhost:9002/ws `}
           topics={[`/user/${myProfile.id}/queue/messages`]}
           ref={(c) => {
             client = c;

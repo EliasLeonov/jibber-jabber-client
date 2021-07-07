@@ -8,6 +8,7 @@ import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import { Validator } from "class-validator";
 import React, { useState } from "react";
 import { useAppDispatch } from "../../storage/app.selectors";
 import { registerUser } from "../../storage/register.reducer";
@@ -42,6 +43,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const validator = new Validator();
+
 const RegisterForm = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastName] = useState("");
@@ -50,6 +53,14 @@ const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const classes = useStyles();
   const dispatch = useAppDispatch();
+
+  const handleClick = async () => {
+    // if (!validator.isEmpty(firstname)) {
+    await dispatch(
+      registerUser({ username, password, mail, firstname, lastname })
+    );
+    // }
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -129,11 +140,7 @@ const RegisterForm = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={async () =>
-              await dispatch(
-                registerUser({ username, password, mail, firstname, lastname })
-              )
-            }
+            onClick={async () => await handleClick()}
           >
             Register
           </Button>

@@ -74,7 +74,7 @@ const ChatsScreen = ({ history }) => {
           color="primary"
           className={styles.postButton}
           onClick={() => {
-            if (value.trim() !== "") {
+            if (value.trim() !== "" && value.trim() != profile.username) {
               history.push(`/chat/${value.trim()}`);
             }
           }}
