@@ -9,6 +9,8 @@ RUN npm install react-scripts@3.4.1 -g --silent
 COPY . ./
 RUN npm run build
 
+ENV REACT_APP_URL devjibjabingsis.ddns.net
+
 # production environment
 FROM nginx:stable-alpine
 COPY --from=build /app/build /usr/share/nginx/html
