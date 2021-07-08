@@ -179,7 +179,7 @@ const PrivateChatScreen = () => {
       </Container>
       {profile && myProfile && (
         <SocketJsClient
-          url={`${protocol}://${process.env.URL}/ws `}
+          url={`https://${process.env.REACT_APP_URL}/ws`}
           topics={[`/user/${myProfile.id}/queue/messages`]}
           ref={(c) => {
             client = c;
@@ -190,7 +190,7 @@ const PrivateChatScreen = () => {
           onDisconnect={() => dispatch(setConnected({ connected: false }))}
           onConnectFailure={() => dispatch(setConnected({ connected: false }))}
           onMessage={onMessage}
-          debug={true}
+          debug={false}
         />
       )}
     </Container>

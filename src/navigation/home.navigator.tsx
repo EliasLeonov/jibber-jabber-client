@@ -66,13 +66,13 @@ const HomeNavigator = () => {
       </Container>
       {profile && (
         <SocketJsClient
-          url={`${protocol}://${process.env.URL}/ws `}
+          url={`https://${process.env.REACT_APP_URL}/ws`}
           topics={[`/user/${profile.id}/queue/messages`]}
           onConnect={() => dispatch(setConnected({ connected: true }))}
           onDisconnect={() => dispatch(setConnected({ connected: false }))}
           onConnectFailure={() => dispatch(setConnected({ connected: false }))}
           onMessage={onMessage}
-          debug={true}
+          debug={false}
         />
       )}
     </Container>
