@@ -6,7 +6,6 @@ on:
 
 jobs:
   azure-deploy:
-    needs: push
     name: Deploy to Azure VM
     runs-on: ubuntu-latest
     steps:
