@@ -14,7 +14,7 @@ jobs:
         uses: appleboy/ssh-action@master
         env:
           REPO_OWNER: ${{ secrets.DOCKERHUB_USERNAME }}
-          GITHUB_TOKEN: ${{ secrets.DOCKERHUB_PASS }}
+          DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
         with:
           username: ${{ secrets.VM_USERNAME }}
           host: ${{ secrets.VM_PUBLIC_IP_DEV }}
