@@ -190,7 +190,7 @@ const PrivateChatScreen = () => {
           onDisconnect={() => dispatch(setConnected({ connected: false }))}
           onConnectFailure={() => dispatch(setConnected({ connected: false }))}
           onMessage={onMessage}
-          debug={true}
+          debug={false}
         />
       )}
     </Container>
