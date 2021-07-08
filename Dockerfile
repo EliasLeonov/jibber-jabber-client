@@ -4,7 +4,7 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 
 
-ENV REACT_APP_URL devjibjabingsis.ddns.net
+ENV REACT_APP_URL prodjibjabingsis.ddns.net
 
 # install app dependencies
 COPY package.json ./
