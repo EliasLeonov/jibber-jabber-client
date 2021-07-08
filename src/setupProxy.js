@@ -28,7 +28,6 @@ module.exports = function (app) {
     createProxyMiddleware({
       target: `${protocol}://${process.env.REACT_APP_URL}`,
       changeOrigin: true,
-      ws: true
     })
   );
 };
