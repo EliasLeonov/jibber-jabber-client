@@ -4,7 +4,7 @@ module.exports = function (app) {
   app.use(
     "/api",
     createProxyMiddleware({
-      target: "http://localhost:9001",
+      target: `https://${process.env.REACT_APP_URL}`,
       changeOrigin: true,
       pathRewrite: {'^/api' : ''}
     })
@@ -14,7 +14,7 @@ module.exports = function (app) {
   app.use(
     "/auth",
     createProxyMiddleware({
-      target: "http://localhost:9000",
+      target: `https://${process.env.REACT_APP_URL}`,
       changeOrigin: true,
         pathRewrite: {'^/auth' : ''}
     })
@@ -23,7 +23,7 @@ module.exports = function (app) {
   app.use(
     "/chat-api",
     createProxyMiddleware({
-      target: "http://localhost:9002",
+      target: `https://${process.env.REACT_APP_URL}`,
       changeOrigin: true,
     })
   );

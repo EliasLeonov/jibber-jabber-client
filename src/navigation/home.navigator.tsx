@@ -66,7 +66,7 @@ const HomeNavigator = () => {
       </Container>
       {profile && (
         <SocketJsClient
-          url={`http://localhost:9002/ws`}
+          url={`https://${process.env.REACT_APP_URL}/ws`}
           topics={[`/user/${profile.id}/queue/messages`]}
           onConnect={() => dispatch(setConnected({ connected: true }))}
           onDisconnect={() => dispatch(setConnected({ connected: false }))}
