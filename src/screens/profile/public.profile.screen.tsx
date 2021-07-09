@@ -10,14 +10,18 @@ import {
 } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import Post from "../../models/post";
 import {
   useAppDispatch,
+  useFeedSelector,
   useProfileSelector,
 } from "../../storage/app.selectors";
+import { savePosts } from "../../storage/feed.reducer";
 import {
   followPublicProfile,
   unFollowPublicProfile,
 } from "../../storage/profile.reducer";
+import ExternalPostsList from "../feed/external.post.list";
 import PostsList from "../feed/posts.list";
 import LoadingScreen from "../loading.screen";
 import { fetchPublicProfile, isFollowingProfile } from "./profile.request";
@@ -44,6 +48,7 @@ const PublicProfileScreen = () => {
   const isLoggedIn = useProfileSelector((state) => state.profile != undefined);
   const [profile, setProfile] = useState(undefined);
   const [isFollowing, setIsFollowing] = useState(false);
+  const posts: Post[] = useFeedSelector((state) => state.posts);
 
   const classes = useStyles();
 
@@ -63,6 +68,7 @@ const PublicProfileScreen = () => {
       }
 
       setProfile(profile);
+      dispatch(savePosts({ posts: profile.posts }));
     }
 
     fetchProfile();
@@ -71,6 +77,13 @@ const PublicProfileScreen = () => {
   if (!profile) {
     return <LoadingScreen />;
   }
+
+  const getPost = () => {
+    if (profile) {
+      return posts.filter((p) => p.author.id === profile.id);
+    }
+    return [];
+  };
 
   return (
     <Container>
@@ -136,7 +149,11 @@ const PublicProfileScreen = () => {
         ) : (
           <div />
         )}
-        <PostsList posts={profile.posts} />
+        {isLoggedIn ? (
+          <PostsList posts={getPost()} />
+        ) : (
+          <ExternalPostsList posts={profile.posts} />
+        )}
       </Container>
     </Container>
   );
