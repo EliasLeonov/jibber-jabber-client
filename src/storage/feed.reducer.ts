@@ -117,6 +117,9 @@ export const FeedSlice = createSlice({
       state.postUnLikeRequestStatus.error = false;
       state.postUnLikeRequestStatus.success = false;
     },
+    savePosts: (state, action) => {
+      state.posts = uniqBy([...state.posts, ...action.payload.posts], "id");
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -224,6 +227,6 @@ export const FeedSlice = createSlice({
   },
 });
 
-export const { clearFeed } = FeedSlice.actions;
+export const { clearFeed, savePosts } = FeedSlice.actions;
 
 export type FeedState = ReturnType<typeof FeedSlice.reducer>;
