@@ -52,8 +52,6 @@ const PrivateProfileScreen = ({ history }) => {
     return <LoadingScreen />;
   }
 
-  console.log(posts);
-
   return (
     <Container>
       <Grid container justify="center" className={classes.root}>
