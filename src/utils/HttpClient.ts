@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const protocol = process.env.HTTPS_PROTOCOL ? "https" : "https";
+const protocol = !!process.env.HTTPS_PROTOCOL ? "https" : "https";
 
 //axios.defaults.withCredentials = true;
 const client = axios.create({
-  baseURL: `${protocol}://${process.env.REACT_APP_URL}`,
+  baseURL: `${"http"}://${"localhost:3000"}`,
 });
 
 //axios.get('some api url', {withCredentials: true});

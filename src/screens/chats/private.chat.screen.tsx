@@ -179,7 +179,7 @@ const PrivateChatScreen = () => {
       </Container>
       {profile && myProfile && (
         <SocketJsClient
-          url={`https://${process.env.REACT_APP_URL}/ws`}
+          url={`http://localhost:9002/ws`}
           topics={[`/user/${myProfile.id}/queue/messages`]}
           ref={(c) => {
             client = c;

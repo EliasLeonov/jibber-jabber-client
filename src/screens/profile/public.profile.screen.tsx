@@ -18,6 +18,7 @@ import {
   followPublicProfile,
   unFollowPublicProfile,
 } from "../../storage/profile.reducer";
+import ExternalPostsList from "../feed/external.post.list";
 import PostsList from "../feed/posts.list";
 import LoadingScreen from "../loading.screen";
 import { fetchPublicProfile, isFollowingProfile } from "./profile.request";
@@ -71,6 +72,8 @@ const PublicProfileScreen = () => {
   if (!profile) {
     return <LoadingScreen />;
   }
+
+  console.log(profile);
 
   return (
     <Container>
@@ -136,7 +139,11 @@ const PublicProfileScreen = () => {
         ) : (
           <div />
         )}
-        <PostsList posts={profile.posts} />
+        {isLoggedIn ? (
+          <PostsList posts={profile.posts} />
+        ) : (
+          <ExternalPostsList posts={profile.posts} />
+        )}
       </Container>
     </Container>
   );

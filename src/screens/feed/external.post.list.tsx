@@ -1,16 +1,14 @@
 import { Container } from "@material-ui/core";
 import React from "react";
-import PostComponent from "./post.component";
+import ExternalPostComponent from "./external.post.component";
 
-const PostsList = (props) => {
+const ExternalPostsList = (props) => {
   const { posts } = props;
 
   return (
     <Container>
       {posts.length > 0 ? (
-        posts.map((x) => (
-          <PostComponent {...x} key={x.id} isLiked={false} likes={0} />
-        ))
+        posts.map((x) => <ExternalPostComponent {...x} key={x.id} />)
       ) : (
         <EmptyComponent />
       )}
@@ -26,4 +24,4 @@ const EmptyComponent = (props) => {
   );
 };
 
-export default PostsList;
+export default ExternalPostsList;
