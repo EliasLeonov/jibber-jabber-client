@@ -8,9 +8,7 @@ const PostsList = (props) => {
   return (
     <Container>
       {posts.length > 0 ? (
-        posts.map((x) => (
-          <PostComponent {...x} key={x.id} isLiked={false} likes={0} />
-        ))
+        posts.map((x) => <PostComponent {...x} key={x.id} />)
       ) : (
         <EmptyComponent />
       )}
